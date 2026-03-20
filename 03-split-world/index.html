@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sancho — Two versions of today. Pick one.</title>
+  <title>Sancho — Two versions of today.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
 
   <style>
     *, *::before, *::after {
@@ -19,21 +18,15 @@
     }
 
     :root {
-      --left-bg: #e8ecf0;
-      --left-text: #2a3540;
-      --left-muted: #6b7c8a;
-      --left-accent: #00ff88;
-      --right-bg: #0f0f0f;
-      --right-text: #f5f0e8;
-      --right-muted: #6b6560;
-      --divider: 1px solid rgba(42, 53, 64, 0.2);
-      --split: 50vw;
+      --split: 50%;
+      --glow-color: rgba(255, 255, 255, 0.55);
     }
 
     html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
+      background: #000;
     }
 
     body {
@@ -42,553 +35,180 @@
       user-select: none;
     }
 
-    /* ── CURSOR ───────────────────────────────────────── */
-    #cursor {
+    /* ── SVG FILM GRAIN FILTER ────────────────────────── */
+    #grain-filter {
       position: fixed;
-      width: 1px;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    /* ── CUSTOM CURSOR ────────────────────────────────── */
+    #cursor-line {
+      position: fixed;
       top: 0;
       bottom: 0;
+      width: 1px;
+      pointer-events: none;
+      z-index: 200;
+      transform: translateX(-50%);
+      /* The glow divider line */
       background: linear-gradient(
         to bottom,
         transparent 0%,
-        rgba(42, 53, 64, 0.35) 15%,
-        rgba(42, 53, 64, 0.5) 50%,
-        rgba(42, 53, 64, 0.35) 85%,
+        rgba(255,255,255,0.0) 5%,
+        rgba(255,255,255,0.6) 30%,
+        rgba(255,255,255,0.8) 50%,
+        rgba(255,255,255,0.6) 70%,
+        rgba(255,255,255,0.0) 95%,
         transparent 100%
       );
-      z-index: 100;
-      pointer-events: none;
-      transform: translateX(-50%);
+      box-shadow: 0 0 8px 1px rgba(255,255,255,0.25), 0 0 24px 2px rgba(255,255,255,0.08);
     }
 
     #cursor-dot {
       position: fixed;
-      width: 8px;
-      height: 8px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      background: var(--left-text);
-      z-index: 101;
+      border: 1px solid rgba(255, 255, 255, 0.5);
       pointer-events: none;
+      z-index: 201;
       transform: translate(-50%, -50%);
-      transition: background 0.3s ease;
-      mix-blend-mode: multiply;
-    }
-
-    body.right-zone #cursor-dot {
-      background: var(--right-text);
-      mix-blend-mode: screen;
-    }
-
-    /* ── VIEWPORT WRAPPER ─────────────────────────────── */
-    #viewport {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-    }
-
-    /* ── SPLIT CONTAINER ──────────────────────────────── */
-    #split {
-      position: absolute;
-      inset: 0;
       display: flex;
-      align-items: stretch;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+      background: rgba(255,255,255,0.04);
     }
 
-    /* ── LEFT SIDE ────────────────────────────────────── */
-    #left {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: var(--split);
-      background: var(--left-bg);
-      overflow: hidden;
-      transition: none;
-    }
-
-    #left-inner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      padding: 48px 40px 80px;
-      will-change: transform;
-    }
-
-    /* ── RIGHT SIDE ───────────────────────────────────── */
-    #right {
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: calc(100vw - var(--split));
-      background: var(--right-bg);
-      overflow: hidden;
-    }
-
-    #right-inner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      padding: 48px 40px 80px;
-      will-change: transform;
-    }
-
-    /* ── DIVIDER LINE ─────────────────────────────────── */
-    #divider {
-      position: fixed;
-      left: var(--split);
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: rgba(42, 53, 64, 0.25);
-      z-index: 50;
-      pointer-events: none;
-      transform: translateX(-50%);
-    }
-
-    /* ── LEFT TYPOGRAPHY SYSTEM ───────────────────────── */
-    .left-date {
-      font-family: 'Inter', sans-serif;
-      font-size: 7px;
-      font-weight: 300;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--left-muted);
-      line-height: 1.4;
-      margin-bottom: 2px;
-    }
-
-    .left-section-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 7px;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--left-muted);
-      border-top: 1px solid rgba(42, 53, 64, 0.15);
-      padding-top: 6px;
-      margin-bottom: 8px;
-      margin-top: 28px;
-    }
-
-    .left-body {
-      font-family: 'Inter', sans-serif;
-      font-size: 7px;
-      font-weight: 300;
-      line-height: 1.9;
-      color: var(--left-text);
-      letter-spacing: 0.01em;
-    }
-
-    .left-title {
-      font-family: 'Inter', sans-serif;
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      color: var(--left-text);
-      line-height: 1.6;
-      margin-bottom: 4px;
-    }
-
-    .left-big {
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--left-text);
-      line-height: 1.5;
-      letter-spacing: -0.01em;
-    }
-
-    .left-time {
-      font-family: 'Inter', sans-serif;
-      font-size: 8px;
-      font-weight: 300;
-      color: var(--left-muted);
-      letter-spacing: 0.08em;
-    }
-
-    /* Notification badge */
-    .notif {
-      display: inline-block;
-      background: var(--left-accent);
-      color: #000;
-      font-size: 6px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      padding: 1px 5px;
-      margin-left: 4px;
-      vertical-align: middle;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .notif-red {
-      background: #ff3b30;
-      color: #fff;
-    }
-
-    .notif-yellow {
-      background: #ffcc00;
-      color: #000;
-    }
-
-    /* Calendar block */
-    .cal-block {
-      border: 1px solid rgba(42, 53, 64, 0.2);
-      padding: 8px 10px;
-      margin-bottom: 4px;
-      background: rgba(255,255,255,0.4);
-    }
-
-    .cal-block .time-label {
-      font-size: 6px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--left-muted);
-      font-family: 'Inter', sans-serif;
-    }
-
-    .cal-block .event-title {
-      font-size: 8px;
-      font-weight: 400;
-      color: var(--left-text);
-      margin-top: 2px;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .cal-block .event-meta {
-      font-size: 6px;
-      color: var(--left-muted);
-      margin-top: 3px;
-      font-family: 'Inter', sans-serif;
-      line-height: 1.7;
-    }
-
-    /* To-do list */
-    .todo-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-      padding: 3px 0;
-      border-bottom: 1px solid rgba(42, 53, 64, 0.06);
-      font-family: 'Inter', sans-serif;
-      font-size: 7px;
-      font-weight: 300;
-      color: var(--left-text);
-      line-height: 1.6;
-    }
-
-    .todo-item .check {
-      width: 8px;
-      height: 8px;
-      border: 1px solid rgba(42, 53, 64, 0.3);
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .todo-item.priority .check {
-      border-color: #ff3b30;
-    }
-
-    .todo-item.priority {
-      color: #ff3b30;
-    }
-
-    /* Email draft */
-    .draft-block {
-      border: 1px dashed rgba(42, 53, 64, 0.25);
-      padding: 10px;
-      background: rgba(255,255,255,0.3);
-      margin-bottom: 4px;
-    }
-
-    .draft-meta {
-      font-size: 6px;
-      color: var(--left-muted);
-      letter-spacing: 0.08em;
-      font-family: 'Inter', sans-serif;
-      margin-bottom: 6px;
-      line-height: 1.8;
-    }
-
-    .draft-body {
-      font-size: 7px;
-      color: var(--left-text);
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      line-height: 2;
-      opacity: 0.7;
-    }
-
-    .draft-label {
-      font-size: 6px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #ffcc00;
-      font-family: 'Inter', sans-serif;
-      margin-bottom: 4px;
-    }
-
-    /* Slack-like messages */
-    .slack-msg {
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(42, 53, 64, 0.07);
-    }
-
-    .slack-sender {
-      font-size: 7px;
-      font-weight: 500;
-      color: var(--left-text);
-      font-family: 'Inter', sans-serif;
-    }
-
-    .slack-time {
-      font-size: 6px;
-      color: var(--left-muted);
-      font-family: 'Inter', sans-serif;
-      margin-left: 6px;
-    }
-
-    .slack-text {
-      font-size: 7px;
-      font-weight: 300;
-      color: var(--left-text);
-      font-family: 'Inter', sans-serif;
-      line-height: 1.8;
-      margin-top: 1px;
-    }
-
-    /* ── RIGHT TYPOGRAPHY SYSTEM ──────────────────────── */
-    .right-date {
-      font-family: 'Inter', sans-serif;
-      font-size: 7px;
-      font-weight: 300;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--right-muted);
-      line-height: 1.4;
-      margin-bottom: 2px;
-    }
-
-    .right-section-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 7px;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--right-muted);
-      border-top: 1px solid rgba(245, 240, 232, 0.1);
-      padding-top: 6px;
-      margin-bottom: 20px;
-      margin-top: 40px;
-    }
-
-    .right-display {
-      font-family: 'DM Serif Display', serif;
-      font-size: 42px;
-      font-weight: 400;
-      color: var(--right-text);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 32px;
-    }
-
-    .right-display em {
-      font-style: italic;
-      color: rgba(245, 240, 232, 0.5);
-    }
-
-    .right-body {
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 300;
-      line-height: 1.8;
-      color: var(--right-text);
-      letter-spacing: 0.01em;
-    }
-
-    .right-meta {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 300;
-      color: var(--right-muted);
-      letter-spacing: 0.06em;
-      line-height: 1.6;
-    }
-
-    /* Calendar block — right */
-    .right-cal {
-      border: 1px solid rgba(245, 240, 232, 0.1);
-      padding: 16px 20px;
-      margin-bottom: 8px;
-      background: rgba(245, 240, 232, 0.04);
-    }
-
-    .right-cal .time-label {
-      font-size: 9px;
-      font-weight: 400;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--right-muted);
-      font-family: 'Inter', sans-serif;
-    }
-
-    .right-cal .event-title {
-      font-size: 14px;
-      font-weight: 300;
-      color: var(--right-text);
-      margin-top: 4px;
-      font-family: 'Inter', sans-serif;
-      line-height: 1.5;
-    }
-
-    .right-cal .event-note {
-      font-size: 10px;
-      color: rgba(245, 240, 232, 0.45);
-      margin-top: 10px;
-      font-family: 'Inter', sans-serif;
-      font-style: italic;
-      line-height: 1.7;
-      border-left: 1px solid rgba(245, 240, 232, 0.1);
-      padding-left: 12px;
-    }
-
-    /* Tasks — right */
-    .right-todo {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(245, 240, 232, 0.06);
-    }
-
-    .right-todo .check-done {
-      width: 14px;
-      height: 14px;
-      border: 1px solid rgba(245, 240, 232, 0.2);
-      flex-shrink: 0;
-      margin-top: 2px;
-      position: relative;
-    }
-
-    .right-todo .check-done::after {
+    #cursor-dot::before,
+    #cursor-dot::after {
       content: '';
       position: absolute;
-      top: 2px;
-      left: 2px;
-      right: 2px;
-      bottom: 2px;
-      background: rgba(245, 240, 232, 0.6);
-    }
-
-    .right-todo .task-text {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--right-text);
-      line-height: 1.7;
-      text-decoration: line-through;
-      text-decoration-color: rgba(245, 240, 232, 0.2);
-    }
-
-    /* Telegram message */
-    .tg-bubble {
-      background: rgba(245, 240, 232, 0.06);
-      border: 1px solid rgba(245, 240, 232, 0.08);
-      padding: 14px 18px;
-      margin-bottom: 6px;
-    }
-
-    .tg-sender {
-      font-family: 'Inter', sans-serif;
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: rgba(245, 240, 232, 0.35);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .tg-text {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--right-text);
-      line-height: 1.8;
-    }
-
-    .tg-time {
-      font-family: 'Inter', sans-serif;
-      font-size: 8px;
-      color: var(--right-muted);
-      margin-top: 8px;
-      text-align: right;
-    }
-
-    /* ── SCROLL PROGRESS ──────────────────────────────── */
-    #scroll-track {
-      position: fixed;
-      right: 16px;
       top: 50%;
-      transform: translateY(-50%);
-      width: 1px;
-      height: 60px;
-      background: rgba(245, 240, 232, 0.1);
-      z-index: 80;
+      width: 6px;
+      height: 1px;
+      background: rgba(255,255,255,0.7);
     }
 
-    #scroll-thumb {
-      width: 1px;
-      height: 0%;
-      background: rgba(245, 240, 232, 0.4);
-      transition: height 0.1s;
+    #cursor-dot::before {
+      right: calc(50% + 2px);
+      transform: translateX(-1px);
     }
 
-    /* ── WHISPER LINE ─────────────────────────────────── */
-    #whisper {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 90;
-      font-family: 'Inter', sans-serif;
-      font-size: 9px;
-      font-weight: 300;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: rgba(100, 110, 120, 0.4);
-      opacity: 0;
-      pointer-events: none;
-      white-space: nowrap;
+    #cursor-dot::after {
+      left: calc(50% + 2px);
+      transform: translateX(1px);
     }
 
-    /* ── PAUSE OVERLAY ────────────────────────────────── */
-    #pause-overlay {
+    /* ── SCENE WRAPPER ────────────────────────────────── */
+    #scene {
       position: fixed;
       inset: 0;
-      z-index: 60;
-      pointer-events: none;
-      opacity: 0;
+      overflow: hidden;
     }
 
-    /* ── STAY PROMPT ──────────────────────────────────── */
-    #stay-prompt {
+    /* ── VIDEO LAYERS ─────────────────────────────────── */
+    .video-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Clip paths driven by CSS variable --split */
+    #video-left {
+      clip-path: polygon(0 0, var(--split) 0, var(--split) 100%, 0 100%);
+    }
+
+    #video-right {
+      clip-path: polygon(var(--split) 0, 100% 0, 100% 100%, var(--split) 100%);
+    }
+
+    /* ── FILM GRAIN OVERLAY ───────────────────────────── */
+    #grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.45;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      mix-blend-mode: overlay;
+      animation: grain-shift 0.08s steps(1) infinite;
+    }
+
+    @keyframes grain-shift {
+      0%   { background-position: 0 0; }
+      10%  { background-position: -5% -10%; }
+      20%  { background-position: -15% 5%; }
+      30%  { background-position: 7% -25%; }
+      40%  { background-position: -5% 25%; }
+      50%  { background-position: -15% 10%; }
+      60%  { background-position: 15% 0%; }
+      70%  { background-position: 0 15%; }
+      80%  { background-position: 3% 35%; }
+      90%  { background-position: -10% 10%; }
+      100% { background-position: 0 0; }
+    }
+
+    /* ── DARK VIGNETTE ────────────────────────────────── */
+    #vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 11;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.65) 100%);
+    }
+
+    /* ── LABEL OVERLAYS ───────────────────────────────── */
+    #label-left,
+    #label-right {
       position: fixed;
       top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 95;
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
-      font-weight: 400;
-      color: rgba(245, 240, 232, 0.6);
-      letter-spacing: 0.05em;
-      opacity: 0;
+      transform: translateY(-50%);
+      z-index: 30;
       pointer-events: none;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    #label-left {
+      left: 36px;
+    }
+
+    #label-right {
+      right: 36px;
+      text-align: right;
+      align-items: flex-end;
+    }
+
+    .label-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .label-word {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.8rem);
+      font-weight: 400;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .label-word em {
+      font-style: italic;
+      color: rgba(255,255,255,0.45);
     }
 
     /* ── HERO HEADLINE ────────────────────────────────── */
@@ -597,111 +217,146 @@
       top: 0;
       left: 0;
       right: 0;
-      z-index: 70;
+      z-index: 50;
       display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 32px;
-      pointer-events: none;
-    }
-
-    #hero-text {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 300;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: rgba(100, 110, 120, 0.5);
-      text-align: center;
-      mix-blend-mode: multiply;
-    }
-
-    /* ── CTA ──────────────────────────────────────────── */
-    #cta-wrapper {
-      position: fixed;
-      bottom: 48px;
-      right: 48px;
-      z-index: 90;
-      opacity: 0;
-      transform: translateY(12px);
-    }
-
-    #cta {
-      display: inline-flex;
+      flex-direction: column;
       align-items: center;
+      padding-top: 48px;
+      pointer-events: none;
       gap: 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
+    }
+
+    #headline {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.4rem, 5.5vw, 5.5rem);
       font-weight: 400;
-      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.95);
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      text-align: center;
+      text-shadow: 0 2px 40px rgba(0,0,0,0.5);
+    }
+
+    #subline {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.6rem, 1.1vw, 0.85rem);
+      font-weight: 300;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: var(--right-text);
-      text-decoration: none;
-      border: 1px solid rgba(245, 240, 232, 0.2);
-      padding: 14px 24px;
-      background: transparent;
-      cursor: none;
-      position: relative;
-      overflow: hidden;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
     }
 
-    #cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(245, 240, 232, 0.05);
-      transform: translateX(-100%);
-      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    #cta:hover::before {
-      transform: translateX(0);
-    }
-
-    #cta-arrow {
-      font-size: 14px;
-      transition: transform 0.3s;
-    }
-
-    #cta:hover #cta-arrow {
-      transform: translateX(4px);
-    }
-
-    /* ── SANCHO WORDMARK ──────────────────────────────── */
+    /* ── WORDMARK ─────────────────────────────────────── */
     #wordmark {
       position: fixed;
       top: 28px;
       right: 36px;
-      z-index: 90;
+      z-index: 100;
       font-family: 'DM Serif Display', serif;
       font-size: 15px;
       font-weight: 400;
-      color: var(--right-text);
-      letter-spacing: 0.04em;
-      opacity: 0.5;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.06em;
+      mix-blend-mode: screen;
+    }
+
+    /* ── SCROLL PROGRESS BAR ──────────────────────────── */
+    #progress-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 1px;
+      width: 0%;
+      background: rgba(255,255,255,0.25);
+      z-index: 100;
+      transition: width 0.1s linear;
     }
 
     /* ── SCROLL HINT ──────────────────────────────────── */
     #scroll-hint {
       position: fixed;
-      bottom: 28px;
-      left: 36px;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 90;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    #scroll-hint-text {
       font-family: 'Inter', sans-serif;
       font-size: 8px;
       font-weight: 300;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: rgba(100, 110, 120, 0.4);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      color: rgba(255,255,255,0.3);
     }
 
-    #scroll-hint-line {
-      width: 24px;
-      height: 1px;
-      background: rgba(100, 110, 120, 0.3);
+    #scroll-hint-arrow {
+      width: 1px;
+      height: 24px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: hint-bob 2s ease-in-out infinite;
+    }
+
+    @keyframes hint-bob {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(4px); opacity: 0.5; }
+    }
+
+    /* ── CTA ──────────────────────────────────────────── */
+    #cta-wrapper {
+      position: fixed;
+      bottom: 52px;
+      right: 52px;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(16px);
+      pointer-events: none;
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    #cta-wrapper.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    #cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #000;
+      text-decoration: none;
+      background: rgba(255,255,255,0.95);
+      padding: 16px 32px;
+      border-radius: 100px;
+      cursor: none;
+      transition: background 0.25s ease, letter-spacing 0.25s ease;
+    }
+
+    #cta:hover {
+      background: #fff;
+      letter-spacing: 0.22em;
+    }
+
+    #cta-arrow {
+      font-size: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    #cta:hover #cta-arrow {
+      transform: translateX(3px);
     }
 
     /* ── DRAG ZONE ────────────────────────────────────── */
@@ -714,509 +369,417 @@
 
     #drag-zone.active {
       pointer-events: all;
+      cursor: none;
     }
 
-    /* ── LEFT DISSOLVE ────────────────────────────────── */
-    #left.dissolving {
-      transition: opacity 0.8s ease, filter 0.8s ease;
+    /* ── CHOICE MOMENT ────────────────────────────────── */
+    #choice-prompt {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.8s ease;
     }
 
-    /* ── SECTION HEADERS (shared) ─────────────────────── */
-    .section-date-shared {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: baseline;
-      margin-bottom: 32px;
+    #choice-inner {
+      text-align: center;
     }
+
+    #choice-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.2rem, 2.5vw, 2rem);
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 40px rgba(0,0,0,0.8);
+    }
+
+    /* ── VIDEO ELEMENTS ──────────────────────────────── */
+    .video-layer video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── IMAGE LAYERS ─────────────────────────────────── */
+    .img-layer {
+      position: absolute;
+      inset: -8%; /* oversized for parallax room */
+      width: 116%;
+      height: 116%;
+      background-size: cover;
+      background-position: center;
+      will-change: transform;
+    }
+
+    .img-left {
+      background-image: url('image_left.jpg');
+      animation: slow-pan-left 18s ease-in-out infinite alternate;
+    }
+
+    .img-right {
+      background-image: url('image_right.jpg');
+      animation: slow-pan-right 22s ease-in-out infinite alternate;
+    }
+
+    @keyframes slow-pan-left {
+      0%   { transform: scale(1.08) translate(0%, 0%); }
+      100% { transform: scale(1.12) translate(-2%, -1.5%); }
+    }
+
+    @keyframes slow-pan-right {
+      0%   { transform: scale(1.1) translate(0%, 0%); }
+      100% { transform: scale(1.08) translate(1.5%, 1%); }
+    }
+
+    /* Warm color grade for left (chaotic) */
+    #video-left::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(80, 40, 0, 0.22);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    /* Cool tint for right (calm/Sancho) */
+    #video-right::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 20, 40, 0.18);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    /* ── SCROLL-DRIVEN REVEAL ─────────────────────────── */
+    /* At 0% scroll: split = 50/50
+       As scroll progresses: left clips down to 20%
+       At end: right expands to 100% */
 
   </style>
 </head>
 <body>
 
-<!-- Cursor -->
-<div id="cursor"></div>
-<div id="cursor-dot"></div>
-
-<!-- Hero -->
-<div id="hero">
-  <div id="hero-text">Two versions of today. Pick one.</div>
-</div>
+<!-- Film grain SVG filter (not visible, just referenced) -->
+<svg id="grain-filter" aria-hidden="true">
+  <defs>
+    <filter id="noise-filter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noiseOut"/>
+      <feColorMatrix type="saturate" values="0" in="noiseOut" result="grayNoise"/>
+      <feBlend in="SourceGraphic" in2="grayNoise" mode="overlay"/>
+    </filter>
+  </defs>
+</svg>
 
 <!-- Wordmark -->
 <div id="wordmark">Sancho</div>
 
-<!-- Divider -->
-<div id="divider"></div>
+<!-- Custom cursor -->
+<div id="cursor-line"></div>
+<div id="cursor-dot"></div>
+
+<!-- Grain + vignette overlays -->
+<div id="grain-overlay"></div>
+<div id="vignette"></div>
+
+<!-- Hero headline -->
+<div id="hero">
+  <div id="headline">Two versions of today.</div>
+  <div id="subline">Drag to choose.</div>
+</div>
+
+<!-- Side labels -->
+<div id="label-left">
+  <div class="label-eyebrow">Without Sancho</div>
+  <div class="label-word">Everything<br><em>waiting.</em></div>
+</div>
+
+<div id="label-right">
+  <div class="label-eyebrow">With Sancho</div>
+  <div class="label-word">Everything<br><em>handled.</em></div>
+</div>
+
+<!-- Scene: two clipped videos -->
+<div id="scene">
+
+  <!-- LEFT — chaotic desk (video with image fallback) -->
+  <div class="video-layer" id="video-left">
+    <video autoplay muted loop playsinline id="vid-left">
+      <source src="video_left.mp4" type="video/mp4" />
+    </video>
+    <!-- Fallback: shown if video fails -->
+    <div class="img-layer img-left" id="fallback-left" style="display:none;" role="img" aria-label="Chaotic desk without Sancho"></div>
+  </div>
+
+  <!-- RIGHT — calm organized desk (video with image fallback) -->
+  <div class="video-layer" id="video-right">
+    <video autoplay muted loop playsinline id="vid-right">
+      <source src="video_right.mp4" type="video/mp4" />
+    </video>
+    <div class="img-layer img-right" id="fallback-right" style="display:none;" role="img" aria-label="Organized desk with Sancho"></div>
+  </div>
+
+</div>
+
+<!-- Choice moment overlay -->
+<div id="choice-prompt">
+  <div id="choice-inner">
+    <div id="choice-text">Which version do you want?</div>
+  </div>
+</div>
 
 <!-- Scroll hint -->
 <div id="scroll-hint">
-  <div id="scroll-hint-line"></div>
-  Scroll
+  <div id="scroll-hint-text">Scroll</div>
+  <div id="scroll-hint-arrow"></div>
 </div>
 
-<!-- Scroll track -->
-<div id="scroll-track"><div id="scroll-thumb"></div></div>
-
-<!-- Whisper -->
-<div id="whisper">it's been handling things.</div>
-
-<!-- Stay prompt -->
-<div id="stay-prompt">Stay?</div>
+<!-- Progress bar -->
+<div id="progress-bar"></div>
 
 <!-- CTA -->
 <div id="cta-wrapper">
   <a href="#" id="cta">Try the other side <span id="cta-arrow">→</span></a>
 </div>
 
-<!-- ── VIEWPORT ───────────────────────────────────────── -->
-<div id="viewport">
-  <div id="split">
-
-    <!-- ──────────────── LEFT SIDE ──────────────────── -->
-    <div id="left">
-      <div id="left-inner">
-
-        <!-- Date header -->
-        <div style="margin-bottom: 40px;">
-          <div class="left-date">Thursday, March 20, 2026</div>
-          <div style="font-family:'Inter',sans-serif;font-size:7px;font-weight:300;color:var(--left-muted);letter-spacing:0.08em;">Everyone else</div>
-        </div>
-
-        <!-- Calendar -->
-        <div class="left-section-label" style="margin-top:0;">Calendar</div>
-        <div class="cal-block">
-          <div class="time-label">09:00 — 09:30</div>
-          <div class="event-title">Team standup</div>
-          <div class="event-meta">Google Meet · 6 attendees<br>No agenda. No notes from last week.</div>
-        </div>
-        <div class="cal-block">
-          <div class="time-label">11:00 — 12:00</div>
-          <div class="event-title">Q2 Planning Review <span class="notif notif-red">!</span></div>
-          <div class="event-meta">Boardroom B · Gio, Fernanda, Diego, Luisa, +3<br>No prep notes found · Deck not attached · <span style="color:#ff3b30;">You are presenting</span></div>
-        </div>
-        <div class="cal-block">
-          <div class="time-label">14:30 — 15:00</div>
-          <div class="event-title">1:1 w/ Sergio</div>
-          <div class="event-meta">Status unknown · Last discussed: 3 weeks ago</div>
-        </div>
-        <div class="cal-block" style="opacity:0.5;">
-          <div class="time-label">16:00 — ???</div>
-          <div class="event-title">Deep work block <span class="notif notif-yellow">fragmented</span></div>
-          <div class="event-meta">7 meetings before this. No notes pre-loaded. Calendar double-booked Tue–Thu.</div>
-        </div>
-
-        <!-- Inbox -->
-        <div class="left-section-label">Inbox <span class="notif">23 unread</span></div>
-        <div class="slack-msg">
-          <div><span class="slack-sender">Gio</span><span class="slack-time">8:47am</span></div>
-          <div class="slack-text">can you pull the retention numbers before the 11am? also do you have the slide from last week? the one with the funnel</div>
-        </div>
-        <div class="slack-msg">
-          <div><span class="slack-sender">Fernanda</span><span class="slack-time">9:02am</span></div>
-          <div class="slack-text">hey did you see Diego's comment on the Notion doc? he's asking about the cohort breakdown again</div>
-        </div>
-        <div class="slack-msg">
-          <div><span class="slack-sender">Luisa</span><span class="slack-time">9:18am</span></div>
-          <div class="slack-text">reminder that the board wants the market sizing updated — they're going to ask about it today</div>
-        </div>
-        <div class="slack-msg" style="opacity:0.6;">
-          <div><span class="slack-sender">Notion bot</span><span class="slack-time">9:31am</span></div>
-          <div class="slack-text">3 comments unresolved · Q2 Planning doc · Last edited: you, 11 days ago</div>
-        </div>
-        <div class="slack-msg" style="opacity:0.4;">
-          <div><span class="slack-sender">GitHub</span><span class="slack-time">8:55am</span></div>
-          <div class="slack-text">PR #447 needs review · CI failed on main · 2 critical issues open</div>
-        </div>
-
-        <!-- Tasks -->
-        <div class="left-section-label">Tasks <span class="notif">47 open</span></div>
-        <div class="todo-item priority">
-          <div class="check"></div>
-          <div>Prep Q2 deck — add market sizing, retention cohort, funnel slide (TODAY)</div>
-        </div>
-        <div class="todo-item priority">
-          <div class="check"></div>
-          <div>Answer Gio re: retention numbers — need to find the spreadsheet first</div>
-        </div>
-        <div class="todo-item">
-          <div class="check"></div>
-          <div>Respond to Fernanda re: Diego's Notion comment</div>
-        </div>
-        <div class="todo-item">
-          <div class="check"></div>
-          <div>Review PR #447</div>
-        </div>
-        <div class="todo-item">
-          <div class="check"></div>
-          <div>Follow up with Luisa on market sizing source</div>
-        </div>
-        <div class="todo-item">
-          <div class="check"></div>
-          <div>Book dentist (moved from last Tuesday)</div>
-        </div>
-        <div class="todo-item">
-          <div class="check"></div>
-          <div>Reply to the invoice from March 3rd that's still open</div>
-        </div>
-        <div class="todo-item" style="opacity:0.5;">
-          <div class="check"></div>
-          <div>Everything from yesterday that didn't happen</div>
-        </div>
-        <div class="todo-item" style="opacity:0.35;">
-          <div class="check"></div>
-          <div>Everything from the day before that</div>
-        </div>
-        <div class="todo-item" style="opacity:0.2;">
-          <div class="check"></div>
-          <div>...</div>
-        </div>
-
-        <!-- Draft -->
-        <div class="left-section-label">Drafts <span class="notif notif-yellow">unsent</span></div>
-        <div class="draft-block">
-          <div class="draft-label">Draft — not sent</div>
-          <div class="draft-meta">
-            To: gio@turbo.ai<br>
-            Subject: Re: Q2 numbers<br>
-            Started: 3 days ago
-          </div>
-          <div class="draft-body">
-            Hi Gio,<br><br>
-            Thanks for flagging this. I wanted to get back to you sooner but I'm still trying to locate the
-            original spreadsheet. The retention numbers you're looking for should be in the Feb cohort analysis but
-            I haven't been able to confirm the<br><br>
-            <span style="opacity:0.4;">[cursor blinking here since Tuesday]</span>
-          </div>
-        </div>
-
-        <!-- Browser tabs -->
-        <div class="left-section-label">Browser — 31 tabs</div>
-        <div class="left-body" style="line-height:2.2;">
-          Q2 planning template — Notion<br>
-          How to calculate retention cohort — Google<br>
-          Market sizing TAM SAM SOM — Google<br>
-          ChatGPT (4 sessions, no memory)<br>
-          How to run a good 1:1 — First Round Capital blog<br>
-          Sergio raise — calculator — Google Sheets<br>
-          "best way to prep for a big meeting" — Reddit<br>
-          TAB 8 — don't remember<br>
-          TAB 9–31 — <span style="opacity:0.4;">probably important</span>
-        </div>
-
-        <div style="height:80px;"></div>
-
-      </div>
-    </div>
-
-    <!-- ──────────────── RIGHT SIDE ──────────────────── -->
-    <div id="right">
-      <div id="right-inner">
-
-        <!-- Date header -->
-        <div style="margin-bottom: 56px;">
-          <div class="right-date">Thursday, March 20, 2026</div>
-          <div style="font-family:'Inter',sans-serif;font-size:7px;font-weight:300;color:var(--right-muted);letter-spacing:0.08em;">You, with Sancho</div>
-        </div>
-
-        <!-- Big display word -->
-        <div class="right-display">
-          Prepared.<br><em>Quietly.</em>
-        </div>
-
-        <!-- Calendar — right -->
-        <div class="right-section-label">Calendar</div>
-        <div class="right-cal">
-          <div class="time-label">11:00 — 12:00</div>
-          <div class="event-title">Q2 Planning Review</div>
-          <div class="event-note">
-            Agenda prepped last night.<br>
-            Retention numbers pulled, annotated, slide-ready.<br>
-            They don't know you already know what they're going to ask.
-          </div>
-        </div>
-        <div class="right-cal" style="margin-top:8px;opacity:0.55;">
-          <div class="time-label">14:30</div>
-          <div class="event-title">1:1 w/ Sergio</div>
-          <div class="event-note" style="font-style:normal;color:rgba(245,240,232,0.3);">
-            Talking points ready. Three things, no more.
-          </div>
-        </div>
-
-        <!-- Tasks — right -->
-        <div class="right-section-label">Today</div>
-        <div class="right-todo">
-          <div class="check-done"></div>
-          <div class="task-text">Q2 deck — retention, funnel, market sizing. Done.</div>
-        </div>
-        <div class="right-todo">
-          <div class="check-done"></div>
-          <div class="task-text">Gio's question answered before he had to ask twice.</div>
-        </div>
-        <div class="right-todo">
-          <div class="check-done"></div>
-          <div class="task-text">Sergio talking points. Dentist booked.</div>
-        </div>
-
-        <!-- Big display word 2 -->
-        <div class="right-display" style="margin-top:56px;font-size:34px;">
-          Three things.<br><em>All done.</em>
-        </div>
-
-        <!-- Telegram message -->
-        <div class="right-section-label">From Sancho, 7:14am</div>
-        <div class="tg-bubble">
-          <div class="tg-sender">Sancho</div>
-          <div class="tg-text">
-            Morning. I prepped your Q2 deck overnight — retention cohort is on slide 4, market sizing updated with the latest numbers. Gio's already been answered. You walk in knowing more than everyone in that room.
-          </div>
-          <div class="tg-time">07:14 ✓✓</div>
-        </div>
-        <div class="tg-bubble" style="opacity:0.45;">
-          <div class="tg-sender">Sancho</div>
-          <div class="tg-text">
-            One more thing — the invoice from March 3rd. Already sent. You're clear.
-          </div>
-          <div class="tg-time">07:31 ✓✓</div>
-        </div>
-
-        <!-- Closing display word -->
-        <div class="right-display" style="margin-top:64px;font-size:50px;line-height:1.0;">
-          Same day.<br><em>Different</em><br>person.
-        </div>
-
-        <div style="height:120px;"></div>
-
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- Pause overlay -->
-<div id="pause-overlay"></div>
-
-<!-- Drag zone -->
+<!-- Drag zone (activated after scroll) -->
 <div id="drag-zone"></div>
 
 <script>
-  gsap.registerPlugin(ScrollTrigger, Draggable);
+  gsap.registerPlugin(ScrollTrigger);
 
-  // ─── STATE ──────────────────────────────────────
+  // ─── VIDEO FALLBACK ──────────────────────────────────
+  function activateFallback(vidId, fallbackId) {
+    const v = document.getElementById(vidId);
+    const fb = document.getElementById(fallbackId);
+    if (!v || !fb) return;
+    const showFallback = () => {
+      v.style.display = 'none';
+      fb.style.display = 'block';
+    };
+    v.addEventListener('error', showFallback);
+    // Timeout: if video hasn't loaded in 5s, use fallback
+    setTimeout(() => { if (v.readyState < 2) showFallback(); }, 5000);
+  }
+  activateFallback('vid-left',  'fallback-left');
+  activateFallback('vid-right', 'fallback-right');
+
+  // ─── STATE ──────────────────────────────────────────
   const state = {
-    splitPct: 50,
-    scrollY: 0,
-    maxScroll: 0,
-    isAtMidpoint: false,
-    midpointTriggered: false,
+    splitPct: 50,          // 0–100, where divider sits
+    phase: 'scroll',       // 'scroll' | 'choice' | 'drag' | 'resolved'
     isDragging: false,
     autoSlideTimer: null,
-    phase: 'scroll', // 'scroll' | 'midpoint' | 'drag' | 'resolved'
     mouseX: window.innerWidth / 2,
     mouseY: window.innerHeight / 2,
   };
 
-  // ─── DOM REFS ────────────────────────────────────
-  const $left      = document.getElementById('left');
-  const $right     = document.getElementById('right');
-  const $leftInner = document.getElementById('left-inner');
-  const $rightInner= document.getElementById('right-inner');
-  const $divider   = document.getElementById('divider');
-  const $cursor    = document.getElementById('cursor');
-  const $dot       = document.getElementById('cursor-dot');
-  const $whisper   = document.getElementById('whisper');
-  const $stay      = document.getElementById('stay-prompt');
-  const $cta       = document.getElementById('cta-wrapper');
-  const $thumb     = document.getElementById('scroll-thumb');
-  const $dragZone  = document.getElementById('drag-zone');
-  const $scrollHint= document.getElementById('scroll-hint');
-  const $heroText  = document.getElementById('hero-text');
+  // ─── DOM REFS ────────────────────────────────────────
+  const $scene       = document.getElementById('scene');
+  const $vidLeft     = document.getElementById('video-left');
+  const $vidRight    = document.getElementById('video-right');
+  const $cursorLine  = document.getElementById('cursor-line');
+  const $cursorDot   = document.getElementById('cursor-dot');
+  const $headline    = document.getElementById('headline');
+  const $subline     = document.getElementById('subline');
+  const $scrollHint  = document.getElementById('scroll-hint');
+  const $progress    = document.getElementById('progress-bar');
+  const $choice      = document.getElementById('choice-prompt');
+  const $dragZone    = document.getElementById('drag-zone');
+  const $cta         = document.getElementById('cta-wrapper');
+  const $labelLeft   = document.getElementById('label-left');
+  const $labelRight  = document.getElementById('label-right');
 
-  // ─── VIRTUAL SCROLL ──────────────────────────────
-  function getMaxScroll() {
-    const leftH  = $leftInner.scrollHeight;
-    const rightH = $rightInner.scrollHeight;
-    return Math.max(leftH, rightH) - window.innerHeight;
+  // ─── SPLIT CONTROL ───────────────────────────────────
+  function setSplit(pct) {
+    state.splitPct = pct;
+    const cssVal = pct + '%';
+    document.documentElement.style.setProperty('--split', cssVal);
+
+    // Also update cursor line position
+    gsap.set($cursorLine, { x: (pct / 100) * window.innerWidth });
+
+    // Fade label overlays based on how far we've dragged
+    const leftStrength  = Math.max(0, (40 - pct) / 35);  // shows when left shrinks below 40%
+    const rightStrength = Math.max(0, (pct - 60) / 35);  // shows when right expands past 60%
+    gsap.set($labelLeft,  { opacity: leftStrength });
+    gsap.set($labelRight, { opacity: rightStrength });
   }
 
-  function updateScroll() {
-    state.maxScroll = getMaxScroll();
-  }
-
-  window.addEventListener('resize', updateScroll);
-  updateScroll();
-
-  // ─── CURSOR TRACKING ────────────────────────────
+  // ─── CURSOR TRACKING ─────────────────────────────────
   window.addEventListener('mousemove', (e) => {
     state.mouseX = e.clientX;
     state.mouseY = e.clientY;
 
-    gsap.to($dot, {
+    gsap.to($cursorDot, {
       x: e.clientX,
       y: e.clientY,
-      duration: 0.08,
-      ease: 'power1.out',
-    });
-
-    gsap.to($cursor, {
-      x: e.clientX,
-      duration: 0.15,
+      duration: 0.1,
       ease: 'power2.out',
     });
 
-    if (e.clientX > state.splitPct / 100 * window.innerWidth) {
-      document.body.classList.add('right-zone');
-    } else {
-      document.body.classList.remove('right-zone');
+    // During drag phase: cursor line follows mouse
+    if (state.phase === 'drag' && !state.isDragging) {
+      gsap.to($cursorLine, {
+        x: e.clientX,
+        duration: 0.15,
+        ease: 'power2.out',
+      });
     }
   });
 
-  // ─── SCROLL ENGINE ───────────────────────────────
-  let targetScrollY = 0;
-  let currentScrollY = 0;
+  // ─── VIRTUAL SCROLL ENGINE ───────────────────────────
+  // We use a fake scroll to drive the split reveal:
+  // 0 → 0.5: nothing (viewing the split)
+  // 0.5 → 0.85: split slowly shifts from 50% to 25% (right world taking over)
+  // 0.85 → 1.0: lock, show choice prompt, activate drag
+
+  let targetVScroll = 0;
+  let currentVScroll = 0;
+  const VIRTUAL_MAX = 1200; // px of virtual scroll travel
   let scrollLocked = false;
+  let choiceTriggered = false;
 
   window.addEventListener('wheel', (e) => {
     if (scrollLocked) return;
     e.preventDefault();
-    targetScrollY = Math.max(0, Math.min(state.maxScroll, targetScrollY + e.deltaY * 0.8));
+    targetVScroll = Math.max(0, Math.min(VIRTUAL_MAX, targetVScroll + e.deltaY * 0.75));
   }, { passive: false });
 
-  // Touch support
   let touchStartY = 0;
-  window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
   window.addEventListener('touchmove', (e) => {
     if (scrollLocked) return;
     const dy = touchStartY - e.touches[0].clientY;
     touchStartY = e.touches[0].clientY;
-    targetScrollY = Math.max(0, Math.min(state.maxScroll, targetScrollY + dy));
+    targetVScroll = Math.max(0, Math.min(VIRTUAL_MAX, targetVScroll + dy));
   }, { passive: true });
 
-  function applyScroll(y) {
-    const pct = state.maxScroll > 0 ? y / state.maxScroll : 0;
+  function applyVScroll(v) {
+    const pct = v / VIRTUAL_MAX; // 0..1
 
-    // Move both panels
-    gsap.set($leftInner,  { y: -y });
-    gsap.set($rightInner, { y: -y });
+    // Update progress bar
+    $progress.style.width = (pct * 100) + '%';
 
-    // Thumb
-    $thumb.style.height = (pct * 100) + '%';
-
-    // Left dissolve
-    const dissolveStart = 0.55;
-    const dissolveEnd   = 0.85;
-    if (pct > dissolveStart) {
-      const t = Math.min(1, (pct - dissolveStart) / (dissolveEnd - dissolveStart));
-      const opacity = 1 - t * 0.82;
-      const blur    = t * 6;
-      $left.style.opacity = opacity;
-      $left.style.filter  = `blur(${blur}px)`;
+    // Hide scroll hint after first scroll
+    if (v > 30) {
+      $scrollHint.style.opacity = '0';
     } else {
-      $left.style.opacity = 1;
-      $left.style.filter  = 'none';
+      $scrollHint.style.opacity = '1';
     }
 
-    // Scroll hint fade
-    if (y > 40) {
-      gsap.to($scrollHint, { opacity: 0, duration: 0.4 });
-    } else {
-      gsap.to($scrollHint, { opacity: 1, duration: 0.4 });
+    // Phase 1 (0 → 0.45): hold at 50/50, just watch
+    if (pct < 0.45) {
+      setSplit(50);
+      return;
     }
 
-    // Midpoint detection: 50% scroll
-    const midpointY = state.maxScroll * 0.48;
-    if (!state.midpointTriggered && y >= midpointY) {
-      triggerMidpoint();
+    // Phase 2 (0.45 → 0.88): split shifts right — right world expands
+    if (pct < 0.88) {
+      const t = (pct - 0.45) / (0.88 - 0.45); // 0..1
+      // Ease: right side grows from 50% to 72%
+      const easedT = 1 - Math.pow(1 - t, 3); // cubic ease out
+      const splitVal = 50 - easedT * 22; // 50 → 28% (left shrinks)
+      setSplit(splitVal);
+
+      // Fade headline: shrink as we get deeper
+      const headlineOpacity = Math.max(0.15, 1 - t * 0.7);
+      gsap.set([$headline, $subline], { opacity: headlineOpacity });
+      return;
     }
 
-    // Show CTA near end
-    if (pct > 0.75) {
-      gsap.to($cta, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
-    } else {
-      gsap.to($cta, { opacity: 0, y: 12, duration: 0.4 });
+    // Phase 3 (0.88+): lock, trigger choice moment
+    setSplit(28);
+    if (!choiceTriggered) {
+      choiceTriggered = true;
+      triggerChoiceMoment();
     }
   }
 
-  // RAF loop — buttery smooth lerp
+  // ─── RAF LOOP ────────────────────────────────────────
   function rafLoop() {
-    currentScrollY = currentScrollY + (targetScrollY - currentScrollY) * 0.085;
-
-    if (Math.abs(currentScrollY - targetScrollY) < 0.05) {
-      currentScrollY = targetScrollY;
-    }
-
-    applyScroll(currentScrollY);
+    currentVScroll += (targetVScroll - currentVScroll) * 0.07;
+    if (Math.abs(currentVScroll - targetVScroll) < 0.02) currentVScroll = targetVScroll;
+    applyVScroll(currentVScroll);
     requestAnimationFrame(rafLoop);
   }
   rafLoop();
 
-  // ─── MIDPOINT TRIGGER ────────────────────────────
-  function triggerMidpoint() {
-    state.midpointTriggered = true;
-    state.phase = 'midpoint';
+  // ─── CHOICE MOMENT ───────────────────────────────────
+  function triggerChoiceMoment() {
     scrollLocked = true;
+    state.phase = 'choice';
 
-    // 0.3s breath pause
-    gsap.to($whisper, {
-      opacity: 1,
-      duration: 0.6,
-      delay: 0.15,
-      ease: 'power1.inOut',
-    });
+    // Show choice prompt
+    gsap.to($choice, { opacity: 1, duration: 0.9, ease: 'power2.inOut' });
 
-    // Divider pulse
-    gsap.to($divider, {
+    // Pulse the divider line (cursor-line flicker)
+    gsap.to($cursorLine, {
       opacity: 0,
-      duration: 0.15,
+      duration: 0.12,
       yoyo: true,
-      repeat: 3,
+      repeat: 5,
       ease: 'none',
       onComplete: () => {
-        // Show "Stay?" after divider pulse
-        gsap.to($stay, { opacity: 1, duration: 0.8, ease: 'power1.in' });
-        gsap.to($cursor, { scaleY: 1.4, duration: 0.3, transformOrigin: 'center center' });
-
-        // Activate drag
+        gsap.set($cursorLine, { opacity: 1 });
+        // Activate drag after flicker
         setTimeout(() => {
+          state.phase = 'drag';
           activateDrag();
           startAutoSlide();
-        }, 300);
+        }, 400);
       }
     });
   }
 
-  // ─── DRAG MECHANIC ───────────────────────────────
+  // ─── DRAG MECHANIC ───────────────────────────────────
   function activateDrag() {
-    state.phase = 'drag';
     $dragZone.classList.add('active');
-    $dragZone.style.cursor = 'ew-resize';
 
     let isDragging = false;
     let dragStartX = 0;
-    let dragStartSplit = 50;
+    let dragStartSplit = state.splitPct;
 
     $dragZone.addEventListener('mousedown', (e) => {
       isDragging = true;
+      state.isDragging = true;
       dragStartX = e.clientX;
       dragStartSplit = state.splitPct;
       clearAutoSlide();
-      document.body.style.cursor = 'ew-resize';
     });
 
     window.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
       const dx = e.clientX - dragStartX;
-      const pct = dragStartSplit + (dx / window.innerWidth) * 100;
-      setSplit(Math.max(5, Math.min(95, pct)));
+      const newSplit = dragStartSplit + (dx / window.innerWidth) * 100;
+      setSplit(Math.max(5, Math.min(95, newSplit)));
+
+      // Move cursor line with drag
+      gsap.set($cursorLine, { x: (state.splitPct / 100) * window.innerWidth });
     });
 
     window.addEventListener('mouseup', () => {
       if (isDragging) {
         isDragging = false;
-        document.body.style.cursor = 'none';
+        state.isDragging = false;
+
+        // Snap decision
         if (state.splitPct > 60) {
           resolveRight();
         } else if (state.splitPct < 40) {
           resolveLeft();
+        }
+        // If in between: start auto-slide
+        else {
+          startAutoSlide();
         }
       }
     });
@@ -1224,56 +787,39 @@
     // Touch
     $dragZone.addEventListener('touchstart', (e) => {
       isDragging = true;
+      state.isDragging = true;
       dragStartX = e.touches[0].clientX;
       dragStartSplit = state.splitPct;
       clearAutoSlide();
-    });
+    }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
       if (!isDragging) return;
       const dx = e.touches[0].clientX - dragStartX;
-      const pct = dragStartSplit + (dx / window.innerWidth) * 100;
-      setSplit(Math.max(5, Math.min(95, pct)));
-    });
+      const newSplit = dragStartSplit + (dx / window.innerWidth) * 100;
+      setSplit(Math.max(5, Math.min(95, newSplit)));
+      gsap.set($cursorLine, { x: (state.splitPct / 100) * window.innerWidth });
+    }, { passive: true });
 
     window.addEventListener('touchend', () => {
       if (isDragging) {
         isDragging = false;
+        state.isDragging = false;
         if (state.splitPct > 60) resolveRight();
         else if (state.splitPct < 40) resolveLeft();
+        else startAutoSlide();
       }
     });
   }
 
-  function setSplit(pct) {
-    state.splitPct = pct;
-    const vw = window.innerWidth;
-    const px = (pct / 100) * vw;
-
-    gsap.set($left,    { width: px });
-    gsap.set($right,   { width: vw - px, x: px });
-    gsap.set($divider, { x: px });
-    gsap.set($cursor,  { x: px });
-
-    // Dissolve left as it shrinks
-    if (pct < 40) {
-      const t = (40 - pct) / 35;
-      $left.style.opacity = Math.max(0, 1 - t);
-      $left.style.filter  = `blur(${t * 8}px)`;
-    } else {
-      $left.style.opacity = 1;
-      $left.style.filter  = 'none';
-    }
-  }
-
-  // ─── AUTO-SLIDE (Sancho decides) ─────────────────
+  // ─── AUTO-SLIDE: Sancho decides ──────────────────────
   function startAutoSlide() {
     clearAutoSlide();
     state.autoSlideTimer = setTimeout(() => {
-      // Sancho made the decision
-      gsap.to($stay, { opacity: 0, duration: 0.4 });
+      // Sancho quietly takes the right side
+      gsap.to($choice, { opacity: 0, duration: 0.5 });
       animateSplitTo(95, resolveRight);
-    }, 4000);
+    }, 4200);
   }
 
   function clearAutoSlide() {
@@ -1287,71 +833,85 @@
     const obj = { pct: state.splitPct };
     gsap.to(obj, {
       pct: targetPct,
-      duration: 1.8,
+      duration: 2.0,
       ease: 'power3.inOut',
-      onUpdate: () => setSplit(obj.pct),
+      onUpdate: () => {
+        setSplit(obj.pct);
+        gsap.set($cursorLine, { x: (obj.pct / 100) * window.innerWidth });
+      },
       onComplete: callback,
     });
   }
 
-  // ─── RESOLVE STATES ──────────────────────────────
+  // ─── RESOLVE: RIGHT WINS ─────────────────────────────
   function resolveRight() {
     state.phase = 'resolved';
+
+    gsap.to($choice, { opacity: 0, duration: 0.4 });
+    gsap.to($cursorLine, { opacity: 0, duration: 0.6 });
+    gsap.to($cursorDot, { opacity: 0, duration: 0.4 });
+
+    // Right video expands to full width
+    const obj = { pct: state.splitPct };
+    gsap.to(obj, {
+      pct: 0,
+      duration: 1.2,
+      ease: 'power3.out',
+      onUpdate: () => {
+        setSplit(obj.pct);
+        document.documentElement.style.setProperty('--split', obj.pct + '%');
+      },
+    });
+
+    // Labels fade out
+    gsap.to([$labelLeft, $labelRight], { opacity: 0, duration: 0.5 });
+
+    // Fade headline back in — clean, minimal
+    gsap.to($headline, { opacity: 0.9, duration: 1.2, delay: 0.6 });
+    gsap.to($subline, { opacity: 0, duration: 0.4 });
+
+    // Show CTA
+    setTimeout(() => {
+      $cta.classList.add('visible');
+    }, 900);
+
+    // Re-enable scroll (for any further content)
     scrollLocked = false;
-
-    gsap.to($left, { opacity: 0, filter: 'blur(12px)', duration: 0.6 });
-    gsap.to($divider, { opacity: 0, duration: 0.4 });
-    gsap.to($whisper, { opacity: 0, duration: 0.5 });
-
-    // Expand right to full width
-    const vw = window.innerWidth;
-    gsap.to($right, { width: vw, x: 0, duration: 0.8, ease: 'power3.out' });
-    gsap.to($cta, { opacity: 1, y: 0, duration: 0.8, delay: 0.4 });
-
-    // Continue scroll
-    targetScrollY = currentScrollY;
   }
 
+  // ─── RESOLVE: LEFT (snap back) ───────────────────────
   function resolveLeft() {
-    // Snap back to 50/50
-    animateSplitTo(50, () => {
+    // User chose the chaos side — gently pull them back
+    gsap.to($choice, { opacity: 0, duration: 0.3 });
+
+    setTimeout(() => {
+      gsap.to($choice, { opacity: 1, duration: 0.6 });
+    }, 400);
+
+    animateSplitTo(28, () => {
       startAutoSlide();
     });
   }
 
-  // ─── INITIAL LAYOUT ──────────────────────────────
-  function initLayout() {
-    const vw = window.innerWidth;
-    const half = vw / 2;
-    gsap.set($left,    { width: half });
-    gsap.set($right,   { width: half, x: half });
-    gsap.set($divider, { x: half });
-    gsap.set($cursor,  { x: half });
-  }
+  // ─── ENTRANCE ANIMATION ──────────────────────────────
+  gsap.set([$headline, $subline, '#wordmark'], { opacity: 0 });
+  gsap.set($scene, { opacity: 0 });
 
-  initLayout();
+  const entryTl = gsap.timeline({ delay: 0.3 });
+  entryTl
+    .to($scene, { opacity: 1, duration: 1.4, ease: 'power2.out' })
+    .to($headline, { opacity: 1, duration: 1.0, ease: 'power1.out' }, '-=0.8')
+    .to($subline,  { opacity: 1, duration: 0.8, ease: 'power1.out' }, '-=0.5')
+    .to('#wordmark', { opacity: 0.5, duration: 0.6 }, '-=0.4');
+
+  // Initial cursor line position
+  gsap.set($cursorLine, { x: window.innerWidth / 2 });
+  gsap.set($cursorDot,  { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+
+  // ─── WINDOW RESIZE ───────────────────────────────────
   window.addEventListener('resize', () => {
-    initLayout();
-    updateScroll();
-  });
-
-  // ─── ENTRANCE ANIMATION ──────────────────────────
-  gsap.set([$left, $right, $heroText], { opacity: 0 });
-
-  const tl = gsap.timeline({ delay: 0.2 });
-  tl.to($left,  { opacity: 1, duration: 0.9, ease: 'power2.out' })
-    .to($right, { opacity: 1, duration: 0.9, ease: 'power2.out' }, '-=0.6')
-    .to($heroText, { opacity: 1, duration: 0.8, ease: 'power1.out' }, '-=0.4');
-
-  // ─── MICRO INTERACTIONS ──────────────────────────
-  // Notification badges pulse (left side)
-  gsap.to('.notif-red', {
-    opacity: 0.5,
-    duration: 1.1,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut',
-    stagger: 0.3,
+    setSplit(state.splitPct);
+    gsap.set($cursorLine, { x: (state.splitPct / 100) * window.innerWidth });
   });
 
 </script>

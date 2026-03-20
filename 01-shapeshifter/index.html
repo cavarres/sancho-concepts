@@ -6,17 +6,17 @@
   <title>SANCHO — Already working. Already yours.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&family=Georgia:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
   <style>
-    /* ─── CSS VARIABLES: DEFAULT STATE ─────────────────────────── */
+    /* ─── DESIGN TOKENS: DEFAULT STATE ─────────────────────────── */
     :root {
-      --bg:             #0a0a0a;
-      --text:           #f0f0f0;
-      --text-dim:       rgba(240,240,240,0.35);
-      --text-mid:       rgba(240,240,240,0.65);
-      --accent:         #f0f0f0;
-      --accent-glow:    rgba(240,240,240,0.08);
-      --border:         rgba(240,240,240,0.1);
+      --text:           #f0ede8;
+      --text-dim:       rgba(240,237,232,0.42);
+      --text-mid:       rgba(240,237,232,0.68);
+      --accent:         #f0ede8;
+      --accent-glow:    rgba(240,237,232,0.1);
+      --border:         rgba(240,237,232,0.12);
 
       --font-wordmark:  'DM Mono', monospace;
       --font-display:   'DM Mono', monospace;
@@ -25,74 +25,79 @@
       --font-prompt:    'DM Mono', monospace;
       --font-cta:       'DM Mono', monospace;
 
-      --display-size:   clamp(2.2rem, 5vw, 4.2rem);
+      --display-size:   clamp(3rem, 8vw, 7rem);
       --display-weight: 300;
-      --display-tracking: 0.02em;
-      --display-leading: 1.1;
+      --display-tracking: -0.02em;
+      --display-leading: 0.95;
       --display-style:  normal;
       --display-transform: none;
 
-      --body-size:      clamp(0.75rem, 1.5vw, 0.875rem);
-      --body-tracking:  0.06em;
+      --body-size:      clamp(0.72rem, 1.4vw, 0.82rem);
+      --body-tracking:  0.08em;
       --body-weight:    300;
 
-      --prompt-size:    clamp(0.85rem, 1.8vw, 1rem);
-      --prompt-tracking: 0.04em;
+      --prompt-size:    clamp(0.82rem, 1.6vw, 0.95rem);
+      --prompt-tracking: 0.05em;
       --prompt-weight:  300;
 
-      --cta-size:       0.75rem;
-      --cta-tracking:   0.12em;
+      --cta-size:       0.68rem;
+      --cta-tracking:   0.16em;
       --cta-weight:     400;
 
-      --transition-duration: 600ms;
+      --overlay-color:  rgba(4, 4, 6, 0.52);
+      --overlay-radial: rgba(0,0,0,0.7);
+
+      --transition-duration: 700ms;
       --transition-easing:   cubic-bezier(0.4, 0, 0.2, 1);
 
-      --grain-opacity:  0.035;
-      --particle-color: 255,255,255;
+      --grain-opacity:  0.055;
+      --particle-color: 240,237,232;
     }
 
     /* ─── THERAPIST STATE ───────────────────────────────────────── */
     body.state-therapist {
-      --bg:             #1a0f00;
-      --text:           #f5c842;
-      --text-dim:       rgba(245,200,66,0.32);
-      --text-mid:       rgba(245,200,66,0.6);
-      --accent:         #f5c842;
-      --accent-glow:    rgba(245,200,66,0.1);
-      --border:         rgba(245,200,66,0.15);
+      --text:           #f2e8d5;
+      --text-dim:       rgba(242,232,213,0.4);
+      --text-mid:       rgba(242,232,213,0.65);
+      --accent:         #e8c98a;
+      --accent-glow:    rgba(232,201,138,0.12);
+      --border:         rgba(242,232,213,0.14);
 
       --font-wordmark:  'Space Grotesk', sans-serif;
-      --font-display:   Georgia, 'Times New Roman', serif;
-      --font-body:      Georgia, serif;
-      --font-activity:  Georgia, serif;
-      --font-prompt:    Georgia, serif;
+      --font-display:   'DM Serif Display', serif;
+      --font-body:      'DM Serif Display', serif;
+      --font-activity:  'DM Serif Display', serif;
+      --font-prompt:    'Space Grotesk', sans-serif;
       --font-cta:       'Space Grotesk', sans-serif;
 
-      --display-size:   clamp(2.4rem, 5.5vw, 4.8rem);
+      --display-size:   clamp(3.2rem, 8.5vw, 7.5rem);
       --display-weight: 400;
-      --display-tracking: 0.01em;
-      --display-leading: 1.25;
+      --display-tracking: -0.01em;
+      --display-leading: 1.05;
       --display-style:  italic;
       --display-transform: none;
 
-      --body-tracking:  0.03em;
+      --body-tracking:  0.04em;
       --body-weight:    400;
-      --prompt-tracking: 0.02em;
+      --prompt-tracking: 0.06em;
       --prompt-weight:  400;
-      --cta-tracking:   0.08em;
-      --grain-opacity:  0.025;
-      --particle-color: 245,200,66;
+      --cta-tracking:   0.1em;
+
+      --overlay-color:  rgba(18, 9, 2, 0.48);
+      --overlay-radial: rgba(10, 5, 0, 0.72);
+
+      --grain-opacity:  0.04;
+      --particle-color: 232,201,138;
     }
 
     /* ─── FOUNDER STATE ─────────────────────────────────────────── */
     body.state-founder {
-      --bg:             #0a0a14;
-      --text:           #e0e8ff;
-      --text-dim:       rgba(224,232,255,0.28);
-      --text-mid:       rgba(224,232,255,0.55);
-      --accent:         #7c9cff;
-      --accent-glow:    rgba(124,156,255,0.12);
-      --border:         rgba(224,232,255,0.12);
+      --text:           #dce8ff;
+      --text-dim:       rgba(220,232,255,0.35);
+      --text-mid:       rgba(220,232,255,0.58);
+      --accent:         #6b8fff;
+      --accent-glow:    rgba(107,143,255,0.18);
+      --border:         rgba(220,232,255,0.1);
 
       --font-wordmark:  'DM Mono', monospace;
       --font-display:   'DM Mono', monospace;
@@ -101,10 +106,10 @@
       --font-prompt:    'DM Mono', monospace;
       --font-cta:       'DM Mono', monospace;
 
-      --display-size:   clamp(1.8rem, 4vw, 3.4rem);
+      --display-size:   clamp(2.6rem, 7vw, 6.2rem);
       --display-weight: 500;
-      --display-tracking: -0.02em;
-      --display-leading: 0.95;
+      --display-tracking: -0.05em;
+      --display-leading: 0.88;
       --display-style:  normal;
       --display-transform: uppercase;
 
@@ -112,20 +117,23 @@
       --body-weight:    400;
       --prompt-tracking: -0.01em;
       --prompt-weight:  500;
-      --cta-tracking:   0.18em;
-      --grain-opacity:  0.04;
-      --particle-color: 124,156,255;
+      --cta-tracking:   0.22em;
+
+      --overlay-color:  rgba(2, 4, 18, 0.55);
+      --overlay-radial: rgba(0, 2, 14, 0.75);
+
+      --grain-opacity:  0.06;
+      --particle-color: 107,143,255;
     }
 
     /* ─── CREATIVE STATE ────────────────────────────────────────── */
     body.state-creative {
-      --bg:             #f5f0e8;
-      --text:           #1a1a1a;
-      --text-dim:       rgba(26,26,26,0.3);
-      --text-mid:       rgba(26,26,26,0.6);
-      --accent:         #1a1a1a;
-      --accent-glow:    rgba(26,26,26,0.06);
-      --border:         rgba(26,26,26,0.12);
+      --text:           #1a1814;
+      --text-dim:       rgba(26,24,20,0.38);
+      --text-mid:       rgba(26,24,20,0.62);
+      --accent:         #2a2520;
+      --accent-glow:    rgba(26,24,20,0.08);
+      --border:         rgba(26,24,20,0.14);
 
       --font-wordmark:  'DM Mono', monospace;
       --font-display:   'DM Serif Display', serif;
@@ -134,20 +142,24 @@
       --font-prompt:    'Space Grotesk', sans-serif;
       --font-cta:       'DM Mono', monospace;
 
-      --display-size:   clamp(3rem, 7vw, 6.5rem);
+      --display-size:   clamp(3.2rem, 9vw, 8rem);
       --display-weight: 400;
-      --display-tracking: -0.01em;
-      --display-leading: 0.92;
+      --display-tracking: -0.03em;
+      --display-leading: 0.9;
       --display-style:  italic;
       --display-transform: none;
 
-      --body-tracking:  0.01em;
+      --body-tracking:  0.02em;
       --body-weight:    400;
-      --prompt-tracking: 0.01em;
+      --prompt-tracking: 0.02em;
       --prompt-weight:  400;
-      --cta-tracking:   0.14em;
-      --grain-opacity:  0.02;
-      --particle-color: 26,26,26;
+      --cta-tracking:   0.18em;
+
+      --overlay-color:  rgba(240, 235, 225, 0.3);
+      --overlay-radial: rgba(255,250,240, 0.55);
+
+      --grain-opacity:  0.035;
+      --particle-color: 26,24,20;
     }
 
     /* ─── RESET & BASE ──────────────────────────────────────────── */
@@ -159,28 +171,67 @@
     }
 
     body {
-      background-color: var(--bg);
       color: var(--text);
       font-family: var(--font-body);
-      transition:
-        background-color var(--transition-duration) var(--transition-easing),
-        color var(--transition-duration) var(--transition-easing);
       position: relative;
+      background: #050507;
     }
 
-    /* ─── GRAIN OVERLAY ─────────────────────────────────────────── */
-    body::before {
-      content: '';
+    /* ─── BACKGROUND IMAGE LAYERS ───────────────────────────────── */
+    #bg-layers {
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 128px 128px;
-      opacity: var(--grain-opacity);
+      z-index: 0;
+    }
+
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 900ms cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: opacity;
+    }
+
+    .bg-layer.active {
+      opacity: 1;
+    }
+
+    #bg-default  { background-image: url('default.jpg');   }
+    #bg-therapist{ background-image: url('therapist.jpg'); }
+    #bg-founder  { background-image: url('founder.jpg');   }
+    #bg-creative { background-image: url('creative.jpg');  }
+
+    /* ─── CINEMATIC OVERLAY (text legibility) ───────────────────── */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      /* Dark gradient heavier at edges, lighter at center where eye rests */
+      background:
+        radial-gradient(ellipse 70% 60% at 38% 55%, transparent 0%, var(--overlay-radial) 100%),
+        linear-gradient(to right, var(--overlay-color) 0%, rgba(0,0,0,0.15) 50%, var(--overlay-color) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 30%, transparent 65%, rgba(0,0,0,0.55) 100%);
+      transition: background var(--transition-duration) var(--transition-easing);
       pointer-events: none;
-      z-index: 100;
+    }
+
+    /* ─── FILM GRAIN SVG FILTER ─────────────────────────────────── */
+    #grain-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      opacity: var(--grain-opacity);
       mix-blend-mode: overlay;
       transition: opacity var(--transition-duration) var(--transition-easing);
+    }
+
+    #grain-overlay svg {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     /* ─── PARTICLE CANVAS ───────────────────────────────────────── */
@@ -188,48 +239,137 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 1;
-      opacity: 0.6;
+      z-index: 3;
+      opacity: 0.5;
     }
 
-    /* ─── LAYOUT ────────────────────────────────────────────────── */
-    #app {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      height: 100%;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      grid-template-columns: 1fr;
-      padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 6vw, 5rem);
+    /* ─── VIGNETTE ──────────────────────────────────────────────── */
+    #vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+      pointer-events: none;
+      z-index: 4;
+      transition: opacity var(--transition-duration) var(--transition-easing);
     }
 
-    /* ─── WORDMARK ──────────────────────────────────────────────── */
+    body.state-creative #vignette {
+      opacity: 0.25;
+    }
+
+    /* ─── SCAN LINE ─────────────────────────────────────────────── */
+    #scan-line {
+      position: fixed;
+      left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 60;
+      top: 0;
+      transition: background var(--transition-duration) var(--transition-easing);
+    }
+
+    #scan-line.scanning {
+      animation: scan 650ms cubic-bezier(0.4, 0, 0.6, 1) forwards;
+    }
+
+    @keyframes scan {
+      0%   { top: 0%;   opacity: 0.7; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* ─── AMBIENT BOTTOM LINE ───────────────────────────────────── */
+    #ambient-line {
+      position: fixed;
+      bottom: 0; left: 0;
+      height: 1px;
+      background: var(--border);
+      width: 0%;
+      z-index: 20;
+      transition:
+        width 1400ms cubic-bezier(0.4, 0, 0.2, 1),
+        background var(--transition-duration) var(--transition-easing);
+    }
+
+    #ambient-line.loaded { width: 100%; }
+
+    /* ─── TRANSPARENT NAV ───────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      padding: clamp(1.6rem, 3.5vw, 2.4rem) clamp(2rem, 6vw, 5rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Subtle top gradient to ensure nav legibility */
+    #nav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
     #wordmark {
       font-family: var(--font-wordmark);
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 400;
-      letter-spacing: 0.38em;
+      letter-spacing: 0.42em;
       text-transform: uppercase;
       color: var(--text-dim);
       transition:
         font-family var(--transition-duration) var(--transition-easing),
         color var(--transition-duration) var(--transition-easing),
         letter-spacing var(--transition-duration) var(--transition-easing);
-      align-self: start;
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1.4rem;
+      z-index: 1;
     }
 
     #wordmark::after {
       content: '';
       display: block;
-      width: 20px;
+      width: 24px;
       height: 1px;
       background: var(--text-dim);
-      transition: background var(--transition-duration) var(--transition-easing),
-                  width var(--transition-duration) var(--transition-easing);
+      transition: background var(--transition-duration) var(--transition-easing);
+    }
+
+    #nav-meta {
+      font-family: var(--font-body);
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition:
+        font-family var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── MAIN LAYOUT ───────────────────────────────────────────── */
+    #app {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      /* rows: nav-space / flex-grow content / bottom row */
+      grid-template-rows: auto 1fr auto;
+      grid-template-columns: 1fr;
+    }
+
+    /* The nav occupies its fixed slot — invisible spacer here */
+    #nav-spacer {
+      height: clamp(5rem, 9vw, 7rem);
     }
 
     /* ─── CENTER STAGE ──────────────────────────────────────────── */
@@ -238,15 +378,15 @@
       flex-direction: column;
       justify-content: center;
       align-items: flex-start;
-      gap: clamp(1.8rem, 3.5vw, 2.8rem);
-      padding: 0 0 4vh 0;
+      gap: clamp(1.6rem, 3vw, 2.4rem);
+      padding: 0 clamp(2rem, 6vw, 5rem) 4vh;
     }
 
     /* ─── ACTIVITY LINE ─────────────────────────────────────────── */
     #activity-wrapper {
       opacity: 0;
-      transform: translateY(8px);
-      transition: opacity 800ms ease, transform 800ms ease;
+      transform: translateY(10px);
+      transition: opacity 900ms ease, transform 900ms ease;
     }
 
     #activity-wrapper.visible {
@@ -256,12 +396,12 @@
 
     #activity-label {
       font-family: var(--font-body);
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       font-weight: var(--body-weight);
-      letter-spacing: 0.22em;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
       color: var(--text-dim);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.55rem;
       transition:
         font-family var(--transition-duration) var(--transition-easing),
         color var(--transition-duration) var(--transition-easing);
@@ -269,13 +409,13 @@
 
     #activity-line {
       font-family: var(--font-activity);
-      font-size: clamp(0.78rem, 1.6vw, 0.95rem);
+      font-size: clamp(0.75rem, 1.5vw, 0.88rem);
       font-weight: var(--body-weight);
       font-style: italic;
       letter-spacing: var(--body-tracking);
       color: var(--text-mid);
-      line-height: 1.6;
-      max-width: 52ch;
+      line-height: 1.65;
+      max-width: 50ch;
       transition:
         font-family var(--transition-duration) var(--transition-easing),
         color var(--transition-duration) var(--transition-easing),
@@ -284,22 +424,21 @@
 
     #activity-dot {
       display: inline-block;
-      width: 5px;
-      height: 5px;
+      width: 4px; height: 4px;
       border-radius: 50%;
       background: var(--accent);
-      margin-right: 0.6em;
+      margin-right: 0.65em;
       vertical-align: middle;
-      animation: pulse 2.4s ease-in-out infinite;
+      animation: pulse 2.6s ease-in-out infinite;
       transition: background var(--transition-duration) var(--transition-easing);
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 0.5; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.3); }
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1.4); }
     }
 
-    /* ─── DISPLAY TEXT (DOUBLE-EXPOSE LAYER) ────────────────────── */
+    /* ─── DISPLAY TEXT — DOUBLE-EXPOSE LAYER ────────────────────── */
     #display-wrapper {
       position: relative;
       overflow: hidden;
@@ -314,7 +453,7 @@
       line-height: var(--display-leading);
       text-transform: var(--display-transform);
       color: var(--text);
-      max-width: 18ch;
+      max-width: 16ch;
       transition:
         font-family var(--transition-duration) var(--transition-easing),
         font-size var(--transition-duration) var(--transition-easing),
@@ -326,7 +465,7 @@
         text-transform var(--transition-duration) var(--transition-easing);
     }
 
-    /* Ghost layer for double-expose effect */
+    /* Ghost layer for double-expose */
     #display-ghost {
       position: absolute;
       top: 0; left: 0;
@@ -337,22 +476,39 @@
     }
 
     #display-ghost.exposing {
-      animation: double-expose 900ms forwards;
+      animation: double-expose 950ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
     @keyframes double-expose {
-      0%   { opacity: 0.85; transform: translate(0, 0); mix-blend-mode: difference; }
-      30%  { opacity: 0.6;  transform: translate(2px, 1px); }
-      60%  { opacity: 0.3;  transform: translate(-1px, 2px); mix-blend-mode: screen; }
+      0%   { opacity: 0.9;  transform: translate(0, 0);    mix-blend-mode: difference; }
+      25%  { opacity: 0.65; transform: translate(3px, 1px); }
+      55%  { opacity: 0.35; transform: translate(-2px, 3px); mix-blend-mode: screen; }
       100% { opacity: 0;    transform: translate(0, 0); }
     }
 
-    /* ─── INPUT AREA ────────────────────────────────────────────── */
+    /* ─── INPUT AREA — BOTTOM LEFT, GHOST-LIKE ──────────────────── */
     #input-area {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.45rem;
     }
+
+    #state-indicator {
+      font-family: var(--font-body);
+      font-size: 0.52rem;
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0;
+      transition:
+        opacity 400ms ease,
+        color var(--transition-duration) var(--transition-easing),
+        font-family var(--transition-duration) var(--transition-easing);
+      margin-bottom: 0.1rem;
+    }
+
+    #state-indicator.visible { opacity: 0.7; }
 
     #prompt-label {
       font-family: var(--font-prompt);
@@ -386,7 +542,7 @@
       padding: 0;
       width: 0;
       min-width: 0;
-      max-width: 40ch;
+      max-width: 36ch;
       flex: 0 0 auto;
       transition:
         font-family var(--transition-duration) var(--transition-easing),
@@ -395,18 +551,18 @@
         letter-spacing var(--transition-duration) var(--transition-easing);
     }
 
-    /* We handle cursor ourselves */
     #cursor {
       display: inline-block;
-      width: 2px;
-      height: 1.1em;
+      width: 1.5px;
+      height: 1em;
       background: var(--accent);
       margin-left: 1px;
       vertical-align: text-bottom;
-      animation: blink 1.1s step-end infinite;
+      animation: blink 1.2s step-end infinite;
       flex-shrink: 0;
-      transition: background var(--transition-duration) var(--transition-easing),
-                  height var(--transition-duration) var(--transition-easing);
+      transition:
+        background var(--transition-duration) var(--transition-easing),
+        height var(--transition-duration) var(--transition-easing);
     }
 
     #cursor.typing {
@@ -419,12 +575,28 @@
       50%       { opacity: 0; }
     }
 
+    #typing-hint {
+      font-family: var(--font-body);
+      font-size: 0.52rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      opacity: 0;
+      transition:
+        opacity 300ms ease,
+        color var(--transition-duration) var(--transition-easing);
+      margin-top: 0.4rem;
+      height: 1em;
+    }
+
+    #typing-hint.visible { opacity: 1; }
+
     /* ─── BOTTOM ROW ────────────────────────────────────────────── */
     #bottom {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      align-self: end;
+      padding: clamp(1.8rem, 4vw, 3rem) clamp(2rem, 6vw, 5rem);
     }
 
     #tagline {
@@ -433,18 +605,18 @@
       font-weight: var(--body-weight);
       letter-spacing: var(--body-tracking);
       color: var(--text-dim);
-      line-height: 1.6;
-      max-width: 28ch;
+      line-height: 1.7;
+      max-width: 26ch;
       transition:
         font-family var(--transition-duration) var(--transition-easing),
         color var(--transition-duration) var(--transition-easing),
         letter-spacing var(--transition-duration) var(--transition-easing);
     }
 
-    /* ─── CTA BUTTON ────────────────────────────────────────────── */
+    /* ─── CTA BUTTON — PILL STYLE (Square-inspired) ─────────────── */
     #cta-wrapper {
       opacity: 0;
-      transform: translateY(6px);
+      transform: translateY(8px);
       pointer-events: none;
       transition: opacity 500ms ease, transform 500ms ease;
     }
@@ -461,15 +633,21 @@
       font-weight: var(--cta-weight);
       letter-spacing: var(--cta-tracking);
       text-transform: uppercase;
-      color: var(--bg);
+      color: #050507;
       background: var(--text);
       border: none;
       cursor: pointer;
-      padding: 0.9em 1.8em;
+      /* High border-radius pill — Square's signature */
+      border-radius: 999px;
+      padding: 0.85em 2em;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.2em;
+      gap: 0.15em;
+      /* Dual-layer shadow — Square technique */
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.3),
+        0 4px 16px rgba(0,0,0,0.25);
       transition:
         font-family var(--transition-duration) var(--transition-easing),
         background var(--transition-duration) var(--transition-easing),
@@ -481,163 +659,124 @@
 
     #cta-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 40px var(--accent-glow);
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.3),
+        0 12px 36px rgba(0,0,0,0.3),
+        0 0 0 1px var(--accent-glow);
     }
 
     #cta-btn:active {
-      transform: translateY(0);
+      transform: translateY(0px);
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.3),
+        0 2px 8px rgba(0,0,0,0.2);
     }
 
     #cta-sub {
-      font-size: 0.55rem;
-      letter-spacing: 0.08em;
-      opacity: 0.6;
+      font-size: 0.5rem;
+      letter-spacing: 0.1em;
+      opacity: 0.55;
       font-style: normal;
-    }
-
-    /* ─── STATE INDICATOR ───────────────────────────────────────── */
-    #state-indicator {
-      font-family: var(--font-body);
-      font-size: 0.55rem;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      opacity: 0;
-      transition: opacity 400ms ease, color var(--transition-duration) var(--transition-easing);
-      margin-bottom: 0.2rem;
-    }
-
-    #state-indicator.visible {
-      opacity: 1;
-    }
-
-    /* ─── AMBIENT LINE ──────────────────────────────────────────── */
-    #ambient-line {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      height: 1px;
-      background: var(--border);
-      width: 0%;
-      transition: width 1200ms var(--transition-easing),
-                  background var(--transition-duration) var(--transition-easing);
-    }
-
-    #ambient-line.loaded {
-      width: 100%;
-    }
-
-    /* ─── SCAN LINE ON TRANSFORM ────────────────────────────────── */
-    #scan-line {
-      position: fixed;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--accent), transparent);
-      opacity: 0;
-      pointer-events: none;
-      z-index: 50;
-      top: 0;
-    }
-
-    #scan-line.scanning {
-      animation: scan 600ms ease-in-out forwards;
-    }
-
-    @keyframes scan {
-      0%   { top: 0%;   opacity: 0.6; }
-      100% { top: 100%; opacity: 0; }
-    }
-
-    /* ─── VIGNETTE ──────────────────────────────────────────────── */
-    #vignette {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
-      pointer-events: none;
-      z-index: 5;
-      transition: opacity var(--transition-duration) var(--transition-easing);
-    }
-
-    body.state-creative #vignette {
-      opacity: 0.3;
-    }
-
-    /* ─── TYPING INDICATOR ──────────────────────────────────────── */
-    #typing-hint {
-      font-family: var(--font-body);
-      font-size: 0.55rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      opacity: 0;
-      transition: opacity 300ms ease, color var(--transition-duration) var(--transition-easing);
-      margin-top: 0.6rem;
-      height: 1em;
-    }
-
-    #typing-hint.visible {
-      opacity: 1;
     }
 
     /* ─── RESPONSIVE ────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      #app {
+      #center {
+        padding: 0 1.5rem 3vh;
+      }
+
+      #bottom {
         padding: 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
       }
 
       #text-input {
-        max-width: 28ch;
+        max-width: 26ch;
       }
 
       .display-text {
-        max-width: 14ch;
+        max-width: 13ch;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Particles -->
-  <canvas id="particle-canvas"></canvas>
+  <!-- ─── BACKGROUND IMAGE LAYERS ────────────────────────────────── -->
+  <div id="bg-layers" aria-hidden="true">
+    <div class="bg-layer active" id="bg-default"></div>
+    <div class="bg-layer"        id="bg-therapist"></div>
+    <div class="bg-layer"        id="bg-founder"></div>
+    <div class="bg-layer"        id="bg-creative"></div>
+  </div>
 
-  <!-- Vignette -->
-  <div id="vignette"></div>
+  <!-- ─── CINEMATIC OVERLAY ──────────────────────────────────────── -->
+  <div id="overlay" aria-hidden="true"></div>
 
-  <!-- Scan line effect -->
-  <div id="scan-line"></div>
+  <!-- ─── FILM GRAIN SVG ─────────────────────────────────────────── -->
+  <div id="grain-overlay" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <filter id="film-grain" x="0%" y="0%" width="100%" height="100%"
+              color-interpolation-filters="sRGB">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.72"
+          numOctaves="4"
+          seed="2"
+          stitchTiles="stitch"
+          result="noise"/>
+        <feColorMatrix type="saturate" values="0" in="noise" result="grey"/>
+        <feBlend in="SourceGraphic" in2="grey" mode="overlay"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#film-grain)"/>
+    </svg>
+  </div>
 
-  <!-- Ambient bottom line -->
-  <div id="ambient-line"></div>
+  <!-- ─── PARTICLES ──────────────────────────────────────────────── -->
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
-  <!-- Main layout -->
+  <!-- ─── VIGNETTE ───────────────────────────────────────────────── -->
+  <div id="vignette" aria-hidden="true"></div>
+
+  <!-- ─── SCAN LINE ──────────────────────────────────────────────── -->
+  <div id="scan-line" aria-hidden="true"></div>
+
+  <!-- ─── AMBIENT LINE ───────────────────────────────────────────── -->
+  <div id="ambient-line" aria-hidden="true"></div>
+
+  <!-- ─── TRANSPARENT NAV ────────────────────────────────────────── -->
+  <nav id="nav">
+    <div id="wordmark">Sancho</div>
+    <div id="nav-meta">Personal AI</div>
+  </nav>
+
+  <!-- ─── MAIN LAYOUT ─────────────────────────────────────────────── -->
   <div id="app">
 
-    <!-- TOP: Wordmark -->
-    <header>
-      <div id="wordmark">Sancho</div>
-    </header>
+    <!-- Spacer matching nav height -->
+    <div id="nav-spacer" aria-hidden="true"></div>
 
-    <!-- MIDDLE: Center stage -->
+    <!-- CENTER: display copy + input -->
     <main id="center">
 
       <!-- Activity line -->
       <div id="activity-wrapper">
         <div id="activity-label">Active now</div>
         <div id="activity-line">
-          <span id="activity-dot"></span>
+          <span id="activity-dot" aria-hidden="true"></span>
           <span id="activity-text">Drafted the board update. Reviewed the Q1 deck. Still here.</span>
         </div>
       </div>
 
-      <!-- Display copy — double-expose layer -->
+      <!-- Display — double-expose layer -->
       <div id="display-wrapper">
         <div class="display-text" id="display-main">Already working.<br>Already yours.</div>
         <div class="display-text" id="display-ghost" aria-hidden="true">Already working.<br>Already yours.</div>
       </div>
 
-      <!-- Input area -->
+      <!-- Input area: bottom-left, minimal -->
       <div id="input-area">
         <div id="state-indicator">— default</div>
         <div id="prompt-label">Who do you want me to be?</div>
@@ -651,14 +790,14 @@
             spellcheck="false"
             aria-label="Who do you want me to be?"
           />
-          <span id="cursor"></span>
+          <span id="cursor" aria-hidden="true"></span>
         </div>
-        <div id="typing-hint">Pause to transform</div>
+        <div id="typing-hint" aria-live="polite">Pause to transform</div>
       </div>
 
     </main>
 
-    <!-- BOTTOM -->
+    <!-- BOTTOM ROW: tagline left, CTA right -->
     <footer id="bottom">
       <div id="tagline">Lives on Telegram.<br>Knows what you need before you ask.</div>
       <div id="cta-wrapper">
@@ -673,64 +812,84 @@
 
   <script>
     /* ─────────────────────────────────────────────────────────────
-       STATE MACHINE
+       STATE DEFINITIONS
     ───────────────────────────────────────────────────────────── */
     const STATES = {
       default: {
         id: 'default',
         label: '— default',
         bodyClass: '',
+        bgLayer: 'bg-default',
         displayCopy: 'Already working.\nAlready yours.',
         activityText: 'Drafted the board update. Reviewed the Q1 deck. Still here.',
         tagline: 'Lives on Telegram.\nKnows what you need before you ask.',
         promptLabel: 'Who do you want me to be?',
         ctaCopy: 'Start.',
         ctaSub: 'Telegram opens.',
+        navMeta: 'Personal AI',
       },
       therapist: {
         id: 'therapist',
         label: '— therapist',
         bodyClass: 'state-therapist',
+        bgLayer: 'bg-therapist',
         displayCopy: 'Here.\nListening.\nPresent.',
-        activityText: 'Holding space. No rush. You don\'t have to explain everything at once.',
+        activityText: "Holding space. No rush. You don't have to explain everything at once.",
         tagline: 'Steady when you need it.\nQuiet when you don\'t.',
-        promptLabel: 'What\'s on your mind?',
+        promptLabel: "What's on your mind?",
         ctaCopy: 'Begin.',
         ctaSub: 'Telegram opens.',
+        navMeta: 'Therapist mode',
       },
       founder: {
         id: 'founder',
         label: '— founder mode',
         bodyClass: 'state-founder',
+        bgLayer: 'bg-founder',
         displayCopy: 'MOVING.\nNOW.',
         activityText: '→ Q2 priorities locked. Investor update drafted. Three decisions cleared.',
         tagline: 'Zero friction.\nFull execution.',
         promptLabel: 'What needs to happen?',
         ctaCopy: 'Deploy.',
         ctaSub: 'Telegram opens.',
+        navMeta: 'Founder mode',
       },
       creative: {
         id: 'creative',
         label: '— creative director',
         bodyClass: 'state-creative',
-        displayCopy: 'Vision first.\nEverything else second.',
+        bgLayer: 'bg-creative',
+        displayCopy: 'Vision first.\nEverything else\nsecond.',
         activityText: 'Pulled references. Wrote the brief. Waiting for your eye.',
         tagline: 'Taste, instinct, execution.\nIn that order.',
         promptLabel: 'What are we building?',
         ctaCopy: 'Create.',
         ctaSub: 'Telegram opens.',
+        navMeta: 'Creative director',
       },
     };
 
     const KEYWORD_MAP = [
-      { keywords: ['therapist', 'therapy', 'emotional', 'listen', 'support', 'mental', 'feelings', 'feeling', 'anxiety', 'calm', 'gentle'], state: 'therapist' },
-      { keywords: ['founder', 'co-founder', 'cofounder', 'ceo', 'startup', 'investor', 'execute', 'build', 'ship', 'growth', 'scale', 'operator', 'hustle'], state: 'founder' },
-      { keywords: ['creative', 'director', 'designer', 'art', 'visual', 'brand', 'editorial', 'aesthetic', 'taste', 'fashion', 'studio', 'campaign'], state: 'creative' },
+      {
+        keywords: ['therapist','therapy','emotional','listen','support','mental',
+                   'feelings','feeling','anxiety','calm','gentle','grief','heal'],
+        state: 'therapist',
+      },
+      {
+        keywords: ['founder','co-founder','cofounder','ceo','startup','investor',
+                   'execute','build','ship','growth','scale','operator','hustle','product'],
+        state: 'founder',
+      },
+      {
+        keywords: ['creative','director','designer','art','visual','brand',
+                   'editorial','aesthetic','taste','fashion','studio','campaign','print'],
+        state: 'creative',
+      },
     ];
 
     let currentState = 'default';
-    let pauseTimer = null;
-    let ctaShown = false;
+    let pauseTimer   = null;
+    let ctaShown     = false;
 
     function detectState(text) {
       const lower = text.toLowerCase().trim();
@@ -744,62 +903,72 @@
     /* ─────────────────────────────────────────────────────────────
        DOM REFS
     ───────────────────────────────────────────────────────────── */
-    const body          = document.body;
-    const displayMain   = document.getElementById('display-main');
-    const displayGhost  = document.getElementById('display-ghost');
-    const activityText  = document.getElementById('activity-text');
-    const tagline       = document.getElementById('tagline');
-    const promptLabel   = document.getElementById('prompt-label');
-    const textInput     = document.getElementById('text-input');
-    const cursor        = document.getElementById('cursor');
-    const ctaWrapper    = document.getElementById('cta-wrapper');
-    const ctaBtn        = document.getElementById('cta-btn');
-    const ctaSub        = document.getElementById('cta-sub');
-    const stateIndicator= document.getElementById('state-indicator');
-    const scanLine      = document.getElementById('scan-line');
-    const typingHint    = document.getElementById('typing-hint');
-    const ambientLine   = document.getElementById('ambient-line');
-    const activityWrapper = document.getElementById('activity-wrapper');
+    const body           = document.body;
+    const displayMain    = document.getElementById('display-main');
+    const displayGhost   = document.getElementById('display-ghost');
+    const activityText   = document.getElementById('activity-text');
+    const taglineEl      = document.getElementById('tagline');
+    const promptLabel    = document.getElementById('prompt-label');
+    const textInput      = document.getElementById('text-input');
+    const cursor         = document.getElementById('cursor');
+    const ctaWrapper     = document.getElementById('cta-wrapper');
+    const ctaBtn         = document.getElementById('cta-btn');
+    const ctaSub         = document.getElementById('cta-sub');
+    const stateIndicator = document.getElementById('state-indicator');
+    const scanLine       = document.getElementById('scan-line');
+    const typingHint     = document.getElementById('typing-hint');
+    const ambientLine    = document.getElementById('ambient-line');
+    const activityWrapper= document.getElementById('activity-wrapper');
+    const navMeta        = document.getElementById('nav-meta');
+
+    /* ─────────────────────────────────────────────────────────────
+       BACKGROUND CROSSFADE
+    ───────────────────────────────────────────────────────────── */
+    function switchBgLayer(layerId) {
+      document.querySelectorAll('.bg-layer').forEach(el => {
+        el.classList.toggle('active', el.id === layerId);
+      });
+    }
 
     /* ─────────────────────────────────────────────────────────────
        INPUT SIZING
     ───────────────────────────────────────────────────────────── */
     const sizer = document.createElement('span');
-    sizer.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;pointer-events:none;top:-9999px;';
+    sizer.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;pointer-events:none;top:-9999px;left:-9999px;';
     document.body.appendChild(sizer);
 
     function syncInputSize() {
       const cs = getComputedStyle(textInput);
-      sizer.style.fontFamily   = cs.fontFamily;
-      sizer.style.fontSize     = cs.fontSize;
-      sizer.style.fontWeight   = cs.fontWeight;
-      sizer.style.letterSpacing= cs.letterSpacing;
+      sizer.style.fontFamily    = cs.fontFamily;
+      sizer.style.fontSize      = cs.fontSize;
+      sizer.style.fontWeight    = cs.fontWeight;
+      sizer.style.letterSpacing = cs.letterSpacing;
       sizer.textContent = textInput.value || '';
-      const w = sizer.offsetWidth;
-      textInput.style.width = (w + 2) + 'px';
+      textInput.style.width = (sizer.offsetWidth + 2) + 'px';
     }
 
     /* ─────────────────────────────────────────────────────────────
-       TYPEWRITER FOR DISPLAY
+       DISPLAY TEXT — DOUBLE-EXPOSE
     ───────────────────────────────────────────────────────────── */
     function setDisplayText(text) {
-      // Capture ghost snapshot (current rendered text)
-      displayGhost.innerHTML = displayMain.innerHTML;
-      displayGhost.style.fontFamily     = getComputedStyle(displayMain).fontFamily;
-      displayGhost.style.fontSize       = getComputedStyle(displayMain).fontSize;
-      displayGhost.style.fontStyle      = getComputedStyle(displayMain).fontStyle;
-      displayGhost.style.letterSpacing  = getComputedStyle(displayMain).letterSpacing;
-      displayGhost.style.lineHeight     = getComputedStyle(displayMain).lineHeight;
-      displayGhost.style.fontWeight     = getComputedStyle(displayMain).fontWeight;
-      displayGhost.style.textTransform  = getComputedStyle(displayMain).textTransform;
-      displayGhost.style.color          = getComputedStyle(displayMain).color;
+      // Snapshot current rendered state into ghost
+      const cs = getComputedStyle(displayMain);
+      displayGhost.innerHTML        = displayMain.innerHTML;
+      displayGhost.style.fontFamily = cs.fontFamily;
+      displayGhost.style.fontSize   = cs.fontSize;
+      displayGhost.style.fontStyle  = cs.fontStyle;
+      displayGhost.style.fontWeight = cs.fontWeight;
+      displayGhost.style.letterSpacing = cs.letterSpacing;
+      displayGhost.style.lineHeight = cs.lineHeight;
+      displayGhost.style.textTransform = cs.textTransform;
+      displayGhost.style.color      = cs.color;
 
-      // Set new text
+      // Set new content
       displayMain.innerHTML = text.replace(/\n/g, '<br>');
 
-      // Trigger double-expose
+      // Fire double-expose animation
       displayGhost.classList.remove('exposing');
-      void displayGhost.offsetWidth; // reflow
+      void displayGhost.offsetWidth; // force reflow
       displayGhost.classList.add('exposing');
 
       displayGhost.addEventListener('animationend', () => {
@@ -813,43 +982,47 @@
     function applyState(stateId) {
       if (stateId === currentState) return;
 
-      const prev  = STATES[currentState];
-      const next  = STATES[stateId];
+      const prev = STATES[currentState];
+      const next = STATES[stateId];
       currentState = stateId;
 
-      // Trigger scan line
+      // Scan line sweep
       scanLine.classList.remove('scanning');
       void scanLine.offsetWidth;
       scanLine.classList.add('scanning');
-      scanLine.addEventListener('animationend', () => scanLine.classList.remove('scanning'), { once: true });
+      scanLine.addEventListener('animationend',
+        () => scanLine.classList.remove('scanning'),
+        { once: true });
 
-      // Swap body class
+      // Swap body class (drives CSS variable cascade)
       if (prev.bodyClass) body.classList.remove(prev.bodyClass);
       if (next.bodyClass) body.classList.add(next.bodyClass);
 
-      // Update display copy (double-expose)
+      // Crossfade background image
+      switchBgLayer(next.bgLayer);
+
+      // Display copy — double-expose
       setDisplayText(next.displayCopy);
 
-      // Update other text nodes
-      activityText.textContent = next.activityText;
-      tagline.innerHTML = next.tagline.replace(/\n/g, '<br>');
-      promptLabel.textContent = next.promptLabel;
+      // Text nodes
+      activityText.textContent     = next.activityText;
+      taglineEl.innerHTML          = next.tagline.replace(/\n/g, '<br>');
+      promptLabel.textContent      = next.promptLabel;
+      navMeta.textContent          = next.navMeta;
+      stateIndicator.textContent   = next.label;
+      stateIndicator.classList.add('visible');
 
       // CTA
       ctaBtn.querySelector('span:first-child').textContent = next.ctaCopy;
       ctaSub.textContent = next.ctaSub;
 
-      // State indicator
-      stateIndicator.textContent = next.label;
-      stateIndicator.classList.add('visible');
-
-      // Show CTA on first transform
+      // Reveal CTA on first non-default state
       if (!ctaShown && stateId !== 'default') {
         ctaShown = true;
-        setTimeout(() => ctaWrapper.classList.add('visible'), 300);
+        setTimeout(() => ctaWrapper.classList.add('visible'), 350);
       }
 
-      // Update particles
+      // Update particle target color
       updateParticleColor();
     }
 
@@ -858,36 +1031,30 @@
     ───────────────────────────────────────────────────────────── */
     textInput.addEventListener('input', () => {
       syncInputSize();
-
       const val = textInput.value;
 
-      // Cursor state
       cursor.classList.add('typing');
       clearTimeout(pauseTimer);
 
-      // Show typing hint after 1 char
       if (val.length > 0) {
         typingHint.classList.add('visible');
       } else {
         typingHint.classList.remove('visible');
-        // Reset to default if cleared
-        setTimeout(() => applyState('default'), 400);
+        setTimeout(() => applyState('default'), 500);
         return;
       }
 
-      // Detect pause → transform
+      // 800ms pause → transform
       pauseTimer = setTimeout(() => {
         cursor.classList.remove('typing');
         typingHint.classList.remove('visible');
-
-        const detected = detectState(val);
-        applyState(detected);
+        applyState(detectState(val));
       }, 800);
     });
 
-    // Click anywhere to focus input
+    // Global focus capture — click anywhere or type to focus
     document.addEventListener('click', () => textInput.focus());
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if (e.key !== 'Tab') textInput.focus();
     });
 
@@ -899,12 +1066,13 @@
     }
 
     /* ─────────────────────────────────────────────────────────────
-       PARTICLES
+       PARTICLE SYSTEM
     ───────────────────────────────────────────────────────────── */
     const canvas = document.getElementById('particle-canvas');
     const ctx    = canvas.getContext('2d');
 
-    let W, H, particles = [], animFrame;
+    let W, H;
+    let particles = [];
     let particleRGB = [255, 255, 255];
     let targetRGB   = [255, 255, 255];
 
@@ -914,16 +1082,16 @@
     }
 
     function updateParticleColor() {
-      const rootStyle = getComputedStyle(document.documentElement);
-      const colorVar  = rootStyle.getPropertyValue('--particle-color').trim();
-      targetRGB = parseRGB(colorVar) || [255, 255, 255];
+      const val = getComputedStyle(document.documentElement)
+        .getPropertyValue('--particle-color').trim();
+      targetRGB = parseRGB(val) || [255, 255, 255];
     }
 
     function lerpRGB(a, b, t) {
       return [
-        Math.round(a[0] + (b[0] - a[0]) * t),
-        Math.round(a[1] + (b[1] - a[1]) * t),
-        Math.round(a[2] + (b[2] - a[2]) * t),
+        Math.round(a[0] + (b[0]-a[0]) * t),
+        Math.round(a[1] + (b[1]-a[1]) * t),
+        Math.round(a[2] + (b[2]-a[2]) * t),
       ];
     }
 
@@ -931,36 +1099,30 @@
       constructor() { this.reset(true); }
 
       reset(init = false) {
-        this.x  = Math.random() * W;
-        this.y  = init ? Math.random() * H : H + 10;
-        this.vy = -(0.08 + Math.random() * 0.22);
-        this.vx = (Math.random() - 0.5) * 0.06;
-        this.alpha = 0;
-        this.maxAlpha = 0.1 + Math.random() * 0.18;
-        this.size = 0.6 + Math.random() * 1.2;
-        this.life = 0;
-        this.maxLife = 180 + Math.random() * 240;
+        this.x        = Math.random() * W;
+        this.y        = init ? Math.random() * H : H + 10;
+        this.vy       = -(0.06 + Math.random() * 0.18);
+        this.vx       = (Math.random() - 0.5) * 0.05;
+        this.alpha    = 0;
+        this.maxAlpha = 0.08 + Math.random() * 0.14;
+        this.size     = 0.5 + Math.random() * 1.0;
+        this.life     = 0;
+        this.maxLife  = 200 + Math.random() * 280;
       }
 
       update() {
         this.life++;
         this.x += this.vx;
         this.y += this.vy;
-
-        const progress = this.life / this.maxLife;
-        if (progress < 0.2) {
-          this.alpha = (progress / 0.2) * this.maxAlpha;
-        } else if (progress > 0.7) {
-          this.alpha = ((1 - progress) / 0.3) * this.maxAlpha;
-        } else {
-          this.alpha = this.maxAlpha;
-        }
-
+        const p = this.life / this.maxLife;
+        if      (p < 0.2) this.alpha = (p / 0.2) * this.maxAlpha;
+        else if (p > 0.72) this.alpha = ((1-p) / 0.28) * this.maxAlpha;
+        else               this.alpha = this.maxAlpha;
         if (this.life >= this.maxLife || this.y < -10) this.reset();
       }
 
       draw() {
-        const [r, g, b] = particleRGB;
+        const [r,g,b] = particleRGB;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${r},${g},${b},${this.alpha})`;
@@ -971,19 +1133,14 @@
     function initParticles() {
       W = canvas.width  = window.innerWidth;
       H = canvas.height = window.innerHeight;
-      particles = Array.from({ length: 60 }, () => new Particle());
+      particles = Array.from({ length: 55 }, () => new Particle());
     }
 
     function animateParticles() {
-      // Lerp color
-      particleRGB = lerpRGB(particleRGB, targetRGB, 0.03);
-
+      particleRGB = lerpRGB(particleRGB, targetRGB, 0.025);
       ctx.clearRect(0, 0, W, H);
-      for (const p of particles) {
-        p.update();
-        p.draw();
-      }
-      animFrame = requestAnimationFrame(animateParticles);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
     }
 
     window.addEventListener('resize', () => {
@@ -992,25 +1149,36 @@
     });
 
     /* ─────────────────────────────────────────────────────────────
-       INIT SEQUENCE
+       IMAGE PRELOAD
+    ───────────────────────────────────────────────────────────── */
+    function preloadImages() {
+      ['default.jpg','therapist.jpg','founder.jpg','creative.jpg'].forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       INIT
     ───────────────────────────────────────────────────────────── */
     function init() {
+      preloadImages();
       initParticles();
       animateParticles();
       updateParticleColor();
 
-      // Ambient line load animation
-      setTimeout(() => ambientLine.classList.add('loaded'), 100);
+      // Ambient line sweep in
+      setTimeout(() => ambientLine.classList.add('loaded'), 120);
 
-      // Activity line fade in
-      setTimeout(() => activityWrapper.classList.add('visible'), 600);
+      // Activity line fade up
+      setTimeout(() => activityWrapper.classList.add('visible'), 700);
 
-      // Auto-focus input
-      setTimeout(() => textInput.focus(), 800);
+      // Auto-focus
+      setTimeout(() => textInput.focus(), 900);
 
       // Show default state indicator briefly
       stateIndicator.textContent = STATES.default.label;
-      setTimeout(() => stateIndicator.classList.add('visible'), 1000);
+      setTimeout(() => stateIndicator.classList.add('visible'), 1100);
     }
 
     document.addEventListener('DOMContentLoaded', init);
