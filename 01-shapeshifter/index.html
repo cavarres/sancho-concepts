@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SANCHO — Already working. Already yours.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&family=Georgia:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── CSS VARIABLES: DEFAULT STATE ─────────────────────────── */
+    :root {
+      --bg:             #0a0a0a;
+      --text:           #f0f0f0;
+      --text-dim:       rgba(240,240,240,0.35);
+      --text-mid:       rgba(240,240,240,0.65);
+      --accent:         #f0f0f0;
+      --accent-glow:    rgba(240,240,240,0.08);
+      --border:         rgba(240,240,240,0.1);
+
+      --font-wordmark:  'DM Mono', monospace;
+      --font-display:   'DM Mono', monospace;
+      --font-body:      'DM Mono', monospace;
+      --font-activity:  'DM Mono', monospace;
+      --font-prompt:    'DM Mono', monospace;
+      --font-cta:       'DM Mono', monospace;
+
+      --display-size:   clamp(2.2rem, 5vw, 4.2rem);
+      --display-weight: 300;
+      --display-tracking: 0.02em;
+      --display-leading: 1.1;
+      --display-style:  normal;
+      --display-transform: none;
+
+      --body-size:      clamp(0.75rem, 1.5vw, 0.875rem);
+      --body-tracking:  0.06em;
+      --body-weight:    300;
+
+      --prompt-size:    clamp(0.85rem, 1.8vw, 1rem);
+      --prompt-tracking: 0.04em;
+      --prompt-weight:  300;
+
+      --cta-size:       0.75rem;
+      --cta-tracking:   0.12em;
+      --cta-weight:     400;
+
+      --transition-duration: 600ms;
+      --transition-easing:   cubic-bezier(0.4, 0, 0.2, 1);
+
+      --grain-opacity:  0.035;
+      --particle-color: 255,255,255;
+    }
+
+    /* ─── THERAPIST STATE ───────────────────────────────────────── */
+    body.state-therapist {
+      --bg:             #1a0f00;
+      --text:           #f5c842;
+      --text-dim:       rgba(245,200,66,0.32);
+      --text-mid:       rgba(245,200,66,0.6);
+      --accent:         #f5c842;
+      --accent-glow:    rgba(245,200,66,0.1);
+      --border:         rgba(245,200,66,0.15);
+
+      --font-wordmark:  'Space Grotesk', sans-serif;
+      --font-display:   Georgia, 'Times New Roman', serif;
+      --font-body:      Georgia, serif;
+      --font-activity:  Georgia, serif;
+      --font-prompt:    Georgia, serif;
+      --font-cta:       'Space Grotesk', sans-serif;
+
+      --display-size:   clamp(2.4rem, 5.5vw, 4.8rem);
+      --display-weight: 400;
+      --display-tracking: 0.01em;
+      --display-leading: 1.25;
+      --display-style:  italic;
+      --display-transform: none;
+
+      --body-tracking:  0.03em;
+      --body-weight:    400;
+      --prompt-tracking: 0.02em;
+      --prompt-weight:  400;
+      --cta-tracking:   0.08em;
+      --grain-opacity:  0.025;
+      --particle-color: 245,200,66;
+    }
+
+    /* ─── FOUNDER STATE ─────────────────────────────────────────── */
+    body.state-founder {
+      --bg:             #0a0a14;
+      --text:           #e0e8ff;
+      --text-dim:       rgba(224,232,255,0.28);
+      --text-mid:       rgba(224,232,255,0.55);
+      --accent:         #7c9cff;
+      --accent-glow:    rgba(124,156,255,0.12);
+      --border:         rgba(224,232,255,0.12);
+
+      --font-wordmark:  'DM Mono', monospace;
+      --font-display:   'DM Mono', monospace;
+      --font-body:      'DM Mono', monospace;
+      --font-activity:  'DM Mono', monospace;
+      --font-prompt:    'DM Mono', monospace;
+      --font-cta:       'DM Mono', monospace;
+
+      --display-size:   clamp(1.8rem, 4vw, 3.4rem);
+      --display-weight: 500;
+      --display-tracking: -0.02em;
+      --display-leading: 0.95;
+      --display-style:  normal;
+      --display-transform: uppercase;
+
+      --body-tracking:  -0.01em;
+      --body-weight:    400;
+      --prompt-tracking: -0.01em;
+      --prompt-weight:  500;
+      --cta-tracking:   0.18em;
+      --grain-opacity:  0.04;
+      --particle-color: 124,156,255;
+    }
+
+    /* ─── CREATIVE STATE ────────────────────────────────────────── */
+    body.state-creative {
+      --bg:             #f5f0e8;
+      --text:           #1a1a1a;
+      --text-dim:       rgba(26,26,26,0.3);
+      --text-mid:       rgba(26,26,26,0.6);
+      --accent:         #1a1a1a;
+      --accent-glow:    rgba(26,26,26,0.06);
+      --border:         rgba(26,26,26,0.12);
+
+      --font-wordmark:  'DM Mono', monospace;
+      --font-display:   'DM Serif Display', serif;
+      --font-body:      'Space Grotesk', sans-serif;
+      --font-activity:  'DM Serif Display', serif;
+      --font-prompt:    'Space Grotesk', sans-serif;
+      --font-cta:       'DM Mono', monospace;
+
+      --display-size:   clamp(3rem, 7vw, 6.5rem);
+      --display-weight: 400;
+      --display-tracking: -0.01em;
+      --display-leading: 0.92;
+      --display-style:  italic;
+      --display-transform: none;
+
+      --body-tracking:  0.01em;
+      --body-weight:    400;
+      --prompt-tracking: 0.01em;
+      --prompt-weight:  400;
+      --cta-tracking:   0.14em;
+      --grain-opacity:  0.02;
+      --particle-color: 26,26,26;
+    }
+
+    /* ─── RESET & BASE ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      transition:
+        background-color var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing);
+      position: relative;
+    }
+
+    /* ─── GRAIN OVERLAY ─────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 128px 128px;
+      opacity: var(--grain-opacity);
+      pointer-events: none;
+      z-index: 100;
+      mix-blend-mode: overlay;
+      transition: opacity var(--transition-duration) var(--transition-easing);
+    }
+
+    /* ─── PARTICLE CANVAS ───────────────────────────────────────── */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    /* ─── LAYOUT ────────────────────────────────────────────────── */
+    #app {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      grid-template-columns: 1fr;
+      padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 6vw, 5rem);
+    }
+
+    /* ─── WORDMARK ──────────────────────────────────────────────── */
+    #wordmark {
+      font-family: var(--font-wordmark);
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition:
+        font-family var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing),
+        letter-spacing var(--transition-duration) var(--transition-easing);
+      align-self: start;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    #wordmark::after {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: var(--text-dim);
+      transition: background var(--transition-duration) var(--transition-easing),
+                  width var(--transition-duration) var(--transition-easing);
+    }
+
+    /* ─── CENTER STAGE ──────────────────────────────────────────── */
+    #center {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: clamp(1.8rem, 3.5vw, 2.8rem);
+      padding: 0 0 4vh 0;
+    }
+
+    /* ─── ACTIVITY LINE ─────────────────────────────────────────── */
+    #activity-wrapper {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 800ms ease, transform 800ms ease;
+    }
+
+    #activity-wrapper.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #activity-label {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      font-weight: var(--body-weight);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.6rem;
+      transition:
+        font-family var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing);
+    }
+
+    #activity-line {
+      font-family: var(--font-activity);
+      font-size: clamp(0.78rem, 1.6vw, 0.95rem);
+      font-weight: var(--body-weight);
+      font-style: italic;
+      letter-spacing: var(--body-tracking);
+      color: var(--text-mid);
+      line-height: 1.6;
+      max-width: 52ch;
+      transition:
+        font-family var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing),
+        letter-spacing var(--transition-duration) var(--transition-easing);
+    }
+
+    #activity-dot {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 0.6em;
+      vertical-align: middle;
+      animation: pulse 2.4s ease-in-out infinite;
+      transition: background var(--transition-duration) var(--transition-easing);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+
+    /* ─── DISPLAY TEXT (DOUBLE-EXPOSE LAYER) ────────────────────── */
+    #display-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .display-text {
+      font-family: var(--font-display);
+      font-size: var(--display-size);
+      font-weight: var(--display-weight);
+      font-style: var(--display-style);
+      letter-spacing: var(--display-tracking);
+      line-height: var(--display-leading);
+      text-transform: var(--display-transform);
+      color: var(--text);
+      max-width: 18ch;
+      transition:
+        font-family var(--transition-duration) var(--transition-easing),
+        font-size var(--transition-duration) var(--transition-easing),
+        font-weight var(--transition-duration) var(--transition-easing),
+        font-style var(--transition-duration) var(--transition-easing),
+        letter-spacing var(--transition-duration) var(--transition-easing),
+        line-height var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing),
+        text-transform var(--transition-duration) var(--transition-easing);
+    }
+
+    /* Ghost layer for double-expose effect */
+    #display-ghost {
+      position: absolute;
+      top: 0; left: 0;
+      pointer-events: none;
+      mix-blend-mode: difference;
+      opacity: 0;
+      color: var(--text);
+    }
+
+    #display-ghost.exposing {
+      animation: double-expose 900ms forwards;
+    }
+
+    @keyframes double-expose {
+      0%   { opacity: 0.85; transform: translate(0, 0); mix-blend-mode: difference; }
+      30%  { opacity: 0.6;  transform: translate(2px, 1px); }
+      60%  { opacity: 0.3;  transform: translate(-1px, 2px); mix-blend-mode: screen; }
+      100% { opacity: 0;    transform: translate(0, 0); }
+    }
+
+    /* ─── INPUT AREA ────────────────────────────────────────────── */
+    #input-area {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    #prompt-label {
+      font-family: var(--font-prompt);
+      font-size: var(--prompt-size);
+      font-weight: var(--prompt-weight);
+      letter-spacing: var(--prompt-tracking);
+      color: var(--text-dim);
+      transition:
+        font-family var(--transition-duration) var(--transition-easing),
+        font-size var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing),
+        letter-spacing var(--transition-duration) var(--transition-easing);
+    }
+
+    #input-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+    }
+
+    #text-input {
+      font-family: var(--font-prompt);
+      font-size: var(--prompt-size);
+      font-weight: var(--prompt-weight);
+      letter-spacing: var(--prompt-tracking);
+      color: var(--text);
+      background: transparent;
+      border: none;
+      outline: none;
+      caret-color: transparent;
+      padding: 0;
+      width: 0;
+      min-width: 0;
+      max-width: 40ch;
+      flex: 0 0 auto;
+      transition:
+        font-family var(--transition-duration) var(--transition-easing),
+        font-size var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing),
+        letter-spacing var(--transition-duration) var(--transition-easing);
+    }
+
+    /* We handle cursor ourselves */
+    #cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--accent);
+      margin-left: 1px;
+      vertical-align: text-bottom;
+      animation: blink 1.1s step-end infinite;
+      flex-shrink: 0;
+      transition: background var(--transition-duration) var(--transition-easing),
+                  height var(--transition-duration) var(--transition-easing);
+    }
+
+    #cursor.typing {
+      animation: none;
+      opacity: 1;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ─── BOTTOM ROW ────────────────────────────────────────────── */
+    #bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      align-self: end;
+    }
+
+    #tagline {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      font-weight: var(--body-weight);
+      letter-spacing: var(--body-tracking);
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-width: 28ch;
+      transition:
+        font-family var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing),
+        letter-spacing var(--transition-duration) var(--transition-easing);
+    }
+
+    /* ─── CTA BUTTON ────────────────────────────────────────────── */
+    #cta-wrapper {
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 500ms ease, transform 500ms ease;
+    }
+
+    #cta-wrapper.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    #cta-btn {
+      font-family: var(--font-cta);
+      font-size: var(--cta-size);
+      font-weight: var(--cta-weight);
+      letter-spacing: var(--cta-tracking);
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--text);
+      border: none;
+      cursor: pointer;
+      padding: 0.9em 1.8em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2em;
+      transition:
+        font-family var(--transition-duration) var(--transition-easing),
+        background var(--transition-duration) var(--transition-easing),
+        color var(--transition-duration) var(--transition-easing),
+        letter-spacing var(--transition-duration) var(--transition-easing),
+        transform 160ms ease,
+        box-shadow 160ms ease;
+    }
+
+    #cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px var(--accent-glow);
+    }
+
+    #cta-btn:active {
+      transform: translateY(0);
+    }
+
+    #cta-sub {
+      font-size: 0.55rem;
+      letter-spacing: 0.08em;
+      opacity: 0.6;
+      font-style: normal;
+    }
+
+    /* ─── STATE INDICATOR ───────────────────────────────────────── */
+    #state-indicator {
+      font-family: var(--font-body);
+      font-size: 0.55rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      opacity: 0;
+      transition: opacity 400ms ease, color var(--transition-duration) var(--transition-easing);
+      margin-bottom: 0.2rem;
+    }
+
+    #state-indicator.visible {
+      opacity: 1;
+    }
+
+    /* ─── AMBIENT LINE ──────────────────────────────────────────── */
+    #ambient-line {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 1px;
+      background: var(--border);
+      width: 0%;
+      transition: width 1200ms var(--transition-easing),
+                  background var(--transition-duration) var(--transition-easing);
+    }
+
+    #ambient-line.loaded {
+      width: 100%;
+    }
+
+    /* ─── SCAN LINE ON TRANSFORM ────────────────────────────────── */
+    #scan-line {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 50;
+      top: 0;
+    }
+
+    #scan-line.scanning {
+      animation: scan 600ms ease-in-out forwards;
+    }
+
+    @keyframes scan {
+      0%   { top: 0%;   opacity: 0.6; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* ─── VIGNETTE ──────────────────────────────────────────────── */
+    #vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+      pointer-events: none;
+      z-index: 5;
+      transition: opacity var(--transition-duration) var(--transition-easing);
+    }
+
+    body.state-creative #vignette {
+      opacity: 0.3;
+    }
+
+    /* ─── TYPING INDICATOR ──────────────────────────────────────── */
+    #typing-hint {
+      font-family: var(--font-body);
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      opacity: 0;
+      transition: opacity 300ms ease, color var(--transition-duration) var(--transition-easing);
+      margin-top: 0.6rem;
+      height: 1em;
+    }
+
+    #typing-hint.visible {
+      opacity: 1;
+    }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      #app {
+        padding: 1.5rem;
+      }
+
+      #text-input {
+        max-width: 28ch;
+      }
+
+      .display-text {
+        max-width: 14ch;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particles -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Vignette -->
+  <div id="vignette"></div>
+
+  <!-- Scan line effect -->
+  <div id="scan-line"></div>
+
+  <!-- Ambient bottom line -->
+  <div id="ambient-line"></div>
+
+  <!-- Main layout -->
+  <div id="app">
+
+    <!-- TOP: Wordmark -->
+    <header>
+      <div id="wordmark">Sancho</div>
+    </header>
+
+    <!-- MIDDLE: Center stage -->
+    <main id="center">
+
+      <!-- Activity line -->
+      <div id="activity-wrapper">
+        <div id="activity-label">Active now</div>
+        <div id="activity-line">
+          <span id="activity-dot"></span>
+          <span id="activity-text">Drafted the board update. Reviewed the Q1 deck. Still here.</span>
+        </div>
+      </div>
+
+      <!-- Display copy — double-expose layer -->
+      <div id="display-wrapper">
+        <div class="display-text" id="display-main">Already working.<br>Already yours.</div>
+        <div class="display-text" id="display-ghost" aria-hidden="true">Already working.<br>Already yours.</div>
+      </div>
+
+      <!-- Input area -->
+      <div id="input-area">
+        <div id="state-indicator">— default</div>
+        <div id="prompt-label">Who do you want me to be?</div>
+        <div id="input-row">
+          <input
+            type="text"
+            id="text-input"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-label="Who do you want me to be?"
+          />
+          <span id="cursor"></span>
+        </div>
+        <div id="typing-hint">Pause to transform</div>
+      </div>
+
+    </main>
+
+    <!-- BOTTOM -->
+    <footer id="bottom">
+      <div id="tagline">Lives on Telegram.<br>Knows what you need before you ask.</div>
+      <div id="cta-wrapper">
+        <button id="cta-btn" onclick="openTelegram()">
+          <span>Start.</span>
+          <span id="cta-sub">Telegram opens.</span>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    /* ─────────────────────────────────────────────────────────────
+       STATE MACHINE
+    ───────────────────────────────────────────────────────────── */
+    const STATES = {
+      default: {
+        id: 'default',
+        label: '— default',
+        bodyClass: '',
+        displayCopy: 'Already working.\nAlready yours.',
+        activityText: 'Drafted the board update. Reviewed the Q1 deck. Still here.',
+        tagline: 'Lives on Telegram.\nKnows what you need before you ask.',
+        promptLabel: 'Who do you want me to be?',
+        ctaCopy: 'Start.',
+        ctaSub: 'Telegram opens.',
+      },
+      therapist: {
+        id: 'therapist',
+        label: '— therapist',
+        bodyClass: 'state-therapist',
+        displayCopy: 'Here.\nListening.\nPresent.',
+        activityText: 'Holding space. No rush. You don\'t have to explain everything at once.',
+        tagline: 'Steady when you need it.\nQuiet when you don\'t.',
+        promptLabel: 'What\'s on your mind?',
+        ctaCopy: 'Begin.',
+        ctaSub: 'Telegram opens.',
+      },
+      founder: {
+        id: 'founder',
+        label: '— founder mode',
+        bodyClass: 'state-founder',
+        displayCopy: 'MOVING.\nNOW.',
+        activityText: '→ Q2 priorities locked. Investor update drafted. Three decisions cleared.',
+        tagline: 'Zero friction.\nFull execution.',
+        promptLabel: 'What needs to happen?',
+        ctaCopy: 'Deploy.',
+        ctaSub: 'Telegram opens.',
+      },
+      creative: {
+        id: 'creative',
+        label: '— creative director',
+        bodyClass: 'state-creative',
+        displayCopy: 'Vision first.\nEverything else second.',
+        activityText: 'Pulled references. Wrote the brief. Waiting for your eye.',
+        tagline: 'Taste, instinct, execution.\nIn that order.',
+        promptLabel: 'What are we building?',
+        ctaCopy: 'Create.',
+        ctaSub: 'Telegram opens.',
+      },
+    };
+
+    const KEYWORD_MAP = [
+      { keywords: ['therapist', 'therapy', 'emotional', 'listen', 'support', 'mental', 'feelings', 'feeling', 'anxiety', 'calm', 'gentle'], state: 'therapist' },
+      { keywords: ['founder', 'co-founder', 'cofounder', 'ceo', 'startup', 'investor', 'execute', 'build', 'ship', 'growth', 'scale', 'operator', 'hustle'], state: 'founder' },
+      { keywords: ['creative', 'director', 'designer', 'art', 'visual', 'brand', 'editorial', 'aesthetic', 'taste', 'fashion', 'studio', 'campaign'], state: 'creative' },
+    ];
+
+    let currentState = 'default';
+    let pauseTimer = null;
+    let ctaShown = false;
+
+    function detectState(text) {
+      const lower = text.toLowerCase().trim();
+      if (!lower) return 'default';
+      for (const { keywords, state } of KEYWORD_MAP) {
+        if (keywords.some(k => lower.includes(k))) return state;
+      }
+      return currentState === 'default' ? 'default' : currentState;
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       DOM REFS
+    ───────────────────────────────────────────────────────────── */
+    const body          = document.body;
+    const displayMain   = document.getElementById('display-main');
+    const displayGhost  = document.getElementById('display-ghost');
+    const activityText  = document.getElementById('activity-text');
+    const tagline       = document.getElementById('tagline');
+    const promptLabel   = document.getElementById('prompt-label');
+    const textInput     = document.getElementById('text-input');
+    const cursor        = document.getElementById('cursor');
+    const ctaWrapper    = document.getElementById('cta-wrapper');
+    const ctaBtn        = document.getElementById('cta-btn');
+    const ctaSub        = document.getElementById('cta-sub');
+    const stateIndicator= document.getElementById('state-indicator');
+    const scanLine      = document.getElementById('scan-line');
+    const typingHint    = document.getElementById('typing-hint');
+    const ambientLine   = document.getElementById('ambient-line');
+    const activityWrapper = document.getElementById('activity-wrapper');
+
+    /* ─────────────────────────────────────────────────────────────
+       INPUT SIZING
+    ───────────────────────────────────────────────────────────── */
+    const sizer = document.createElement('span');
+    sizer.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;pointer-events:none;top:-9999px;';
+    document.body.appendChild(sizer);
+
+    function syncInputSize() {
+      const cs = getComputedStyle(textInput);
+      sizer.style.fontFamily   = cs.fontFamily;
+      sizer.style.fontSize     = cs.fontSize;
+      sizer.style.fontWeight   = cs.fontWeight;
+      sizer.style.letterSpacing= cs.letterSpacing;
+      sizer.textContent = textInput.value || '';
+      const w = sizer.offsetWidth;
+      textInput.style.width = (w + 2) + 'px';
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       TYPEWRITER FOR DISPLAY
+    ───────────────────────────────────────────────────────────── */
+    function setDisplayText(text) {
+      // Capture ghost snapshot (current rendered text)
+      displayGhost.innerHTML = displayMain.innerHTML;
+      displayGhost.style.fontFamily     = getComputedStyle(displayMain).fontFamily;
+      displayGhost.style.fontSize       = getComputedStyle(displayMain).fontSize;
+      displayGhost.style.fontStyle      = getComputedStyle(displayMain).fontStyle;
+      displayGhost.style.letterSpacing  = getComputedStyle(displayMain).letterSpacing;
+      displayGhost.style.lineHeight     = getComputedStyle(displayMain).lineHeight;
+      displayGhost.style.fontWeight     = getComputedStyle(displayMain).fontWeight;
+      displayGhost.style.textTransform  = getComputedStyle(displayMain).textTransform;
+      displayGhost.style.color          = getComputedStyle(displayMain).color;
+
+      // Set new text
+      displayMain.innerHTML = text.replace(/\n/g, '<br>');
+
+      // Trigger double-expose
+      displayGhost.classList.remove('exposing');
+      void displayGhost.offsetWidth; // reflow
+      displayGhost.classList.add('exposing');
+
+      displayGhost.addEventListener('animationend', () => {
+        displayGhost.classList.remove('exposing');
+      }, { once: true });
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       STATE TRANSITION
+    ───────────────────────────────────────────────────────────── */
+    function applyState(stateId) {
+      if (stateId === currentState) return;
+
+      const prev  = STATES[currentState];
+      const next  = STATES[stateId];
+      currentState = stateId;
+
+      // Trigger scan line
+      scanLine.classList.remove('scanning');
+      void scanLine.offsetWidth;
+      scanLine.classList.add('scanning');
+      scanLine.addEventListener('animationend', () => scanLine.classList.remove('scanning'), { once: true });
+
+      // Swap body class
+      if (prev.bodyClass) body.classList.remove(prev.bodyClass);
+      if (next.bodyClass) body.classList.add(next.bodyClass);
+
+      // Update display copy (double-expose)
+      setDisplayText(next.displayCopy);
+
+      // Update other text nodes
+      activityText.textContent = next.activityText;
+      tagline.innerHTML = next.tagline.replace(/\n/g, '<br>');
+      promptLabel.textContent = next.promptLabel;
+
+      // CTA
+      ctaBtn.querySelector('span:first-child').textContent = next.ctaCopy;
+      ctaSub.textContent = next.ctaSub;
+
+      // State indicator
+      stateIndicator.textContent = next.label;
+      stateIndicator.classList.add('visible');
+
+      // Show CTA on first transform
+      if (!ctaShown && stateId !== 'default') {
+        ctaShown = true;
+        setTimeout(() => ctaWrapper.classList.add('visible'), 300);
+      }
+
+      // Update particles
+      updateParticleColor();
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       INPUT HANDLER
+    ───────────────────────────────────────────────────────────── */
+    textInput.addEventListener('input', () => {
+      syncInputSize();
+
+      const val = textInput.value;
+
+      // Cursor state
+      cursor.classList.add('typing');
+      clearTimeout(pauseTimer);
+
+      // Show typing hint after 1 char
+      if (val.length > 0) {
+        typingHint.classList.add('visible');
+      } else {
+        typingHint.classList.remove('visible');
+        // Reset to default if cleared
+        setTimeout(() => applyState('default'), 400);
+        return;
+      }
+
+      // Detect pause → transform
+      pauseTimer = setTimeout(() => {
+        cursor.classList.remove('typing');
+        typingHint.classList.remove('visible');
+
+        const detected = detectState(val);
+        applyState(detected);
+      }, 800);
+    });
+
+    // Click anywhere to focus input
+    document.addEventListener('click', () => textInput.focus());
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') textInput.focus();
+    });
+
+    /* ─────────────────────────────────────────────────────────────
+       CTA
+    ───────────────────────────────────────────────────────────── */
+    function openTelegram() {
+      window.open('https://t.me/sanchoai_bot', '_blank');
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       PARTICLES
+    ───────────────────────────────────────────────────────────── */
+    const canvas = document.getElementById('particle-canvas');
+    const ctx    = canvas.getContext('2d');
+
+    let W, H, particles = [], animFrame;
+    let particleRGB = [255, 255, 255];
+    let targetRGB   = [255, 255, 255];
+
+    function parseRGB(str) {
+      const m = str.match(/(\d+),\s*(\d+),\s*(\d+)/);
+      return m ? [+m[1], +m[2], +m[3]] : [255, 255, 255];
+    }
+
+    function updateParticleColor() {
+      const rootStyle = getComputedStyle(document.documentElement);
+      const colorVar  = rootStyle.getPropertyValue('--particle-color').trim();
+      targetRGB = parseRGB(colorVar) || [255, 255, 255];
+    }
+
+    function lerpRGB(a, b, t) {
+      return [
+        Math.round(a[0] + (b[0] - a[0]) * t),
+        Math.round(a[1] + (b[1] - a[1]) * t),
+        Math.round(a[2] + (b[2] - a[2]) * t),
+      ];
+    }
+
+    class Particle {
+      constructor() { this.reset(true); }
+
+      reset(init = false) {
+        this.x  = Math.random() * W;
+        this.y  = init ? Math.random() * H : H + 10;
+        this.vy = -(0.08 + Math.random() * 0.22);
+        this.vx = (Math.random() - 0.5) * 0.06;
+        this.alpha = 0;
+        this.maxAlpha = 0.1 + Math.random() * 0.18;
+        this.size = 0.6 + Math.random() * 1.2;
+        this.life = 0;
+        this.maxLife = 180 + Math.random() * 240;
+      }
+
+      update() {
+        this.life++;
+        this.x += this.vx;
+        this.y += this.vy;
+
+        const progress = this.life / this.maxLife;
+        if (progress < 0.2) {
+          this.alpha = (progress / 0.2) * this.maxAlpha;
+        } else if (progress > 0.7) {
+          this.alpha = ((1 - progress) / 0.3) * this.maxAlpha;
+        } else {
+          this.alpha = this.maxAlpha;
+        }
+
+        if (this.life >= this.maxLife || this.y < -10) this.reset();
+      }
+
+      draw() {
+        const [r, g, b] = particleRGB;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},${this.alpha})`;
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      particles = Array.from({ length: 60 }, () => new Particle());
+    }
+
+    function animateParticles() {
+      // Lerp color
+      particleRGB = lerpRGB(particleRGB, targetRGB, 0.03);
+
+      ctx.clearRect(0, 0, W, H);
+      for (const p of particles) {
+        p.update();
+        p.draw();
+      }
+      animFrame = requestAnimationFrame(animateParticles);
+    }
+
+    window.addEventListener('resize', () => {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    });
+
+    /* ─────────────────────────────────────────────────────────────
+       INIT SEQUENCE
+    ───────────────────────────────────────────────────────────── */
+    function init() {
+      initParticles();
+      animateParticles();
+      updateParticleColor();
+
+      // Ambient line load animation
+      setTimeout(() => ambientLine.classList.add('loaded'), 100);
+
+      // Activity line fade in
+      setTimeout(() => activityWrapper.classList.add('visible'), 600);
+
+      // Auto-focus input
+      setTimeout(() => textInput.focus(), 800);
+
+      // Show default state indicator briefly
+      stateIndicator.textContent = STATES.default.label;
+      setTimeout(() => stateIndicator.classList.add('visible'), 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

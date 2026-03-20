@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SANCHO DAILY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IM+Fell+English:ital@0;1&family=UnifrakturMaguntia&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f5f0e8;
+      --ink: #1a1a1a;
+      --ink-light: #3a3530;
+      --ink-faint: #7a6f62;
+      --red: #c41e1e;
+      --rule: #d4c9b8;
+      --rule-dark: #b8a99a;
+      --font-head: 'Playfair Display', 'Georgia', serif;
+      --font-body: 'IM Fell English', 'Palatino Linotype', 'Book Antiqua', serif;
+      --font-display: 'Impact', 'Franklin Gothic Heavy', 'Arial Black', sans-serif;
+    }
+
+    html {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--cream);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    body.visible { opacity: 1; }
+
+    /* ─── Paper Texture Overlay ─────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1000;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.6;
+    }
+
+    /* ─── Wrapper ────────────────────────────────────────────────────── */
+    .newspaper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    /* ─── Masthead ───────────────────────────────────────────────────── */
+    .masthead {
+      border-top: 5px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      padding: 20px 0 16px;
+      margin-bottom: 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .masthead-top-rule {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      border-bottom: 1px solid var(--rule-dark);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      font-family: var(--font-body);
+    }
+
+    .masthead-top-rule .day-count {
+      color: var(--red);
+      font-style: italic;
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      text-transform: none;
+    }
+
+    .masthead-logo {
+      font-family: var(--font-display);
+      font-size: clamp(72px, 11vw, 148px);
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-transform: uppercase;
+      cursor: default;
+      user-select: none;
+      /* hot metal print shadow */
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.12), 2px 2px 0 rgba(0,0,0,0.06);
+    }
+
+    .masthead-logo .name-dynamic {
+      color: var(--red);
+      position: relative;
+      display: inline-block;
+    }
+
+    .masthead-tagline {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: 8.5px;
+      letter-spacing: 0.18em;
+      color: var(--ink-faint);
+      margin-top: 8px;
+      text-transform: uppercase;
+    }
+
+    .masthead-rule-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--rule-dark);
+      font-size: 8px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      font-family: var(--font-body);
+    }
+
+    .masthead-rule-bottom span { display: flex; align-items: center; gap: 12px; }
+    .masthead-rule-bottom span::before,
+    .masthead-rule-bottom span::after {
+      content: '◆';
+      font-size: 6px;
+      color: var(--rule-dark);
+    }
+
+    /* ─── Section rule with label ────────────────────────────────────── */
+    .section-label {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0 16px;
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      font-family: var(--font-body);
+    }
+    .section-label::before,
+    .section-label::after {
+      content: '';
+      height: 1px;
+      background: var(--rule-dark);
+    }
+
+    /* ─── Main 3-col broadsheet grid ─────────────────────────────────── */
+    .broadsheet {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr 1px 1fr;
+      column-gap: 0;
+      border-top: 3px double var(--ink);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .col-divider {
+      background: var(--rule-dark);
+      align-self: stretch;
+    }
+
+    /* Lead story spans full left column */
+    .col-lead {
+      padding: 20px 24px 20px 0;
+    }
+
+    .col-mid {
+      padding: 20px 24px;
+    }
+
+    .col-right {
+      padding: 20px 0 20px 24px;
+    }
+
+    /* ─── Story blocks ───────────────────────────────────────────────── */
+    .story {
+      margin-bottom: 24px;
+    }
+
+    .story + .story {
+      border-top: 1px solid var(--rule);
+      padding-top: 20px;
+    }
+
+    .story-kicker {
+      font-size: 8px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-family: var(--font-body);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .story-kicker::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--red);
+      opacity: 0.3;
+    }
+
+    .story-headline {
+      font-family: var(--font-head);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .story-headline.xl {
+      font-size: clamp(26px, 3vw, 38px);
+      line-height: 1.05;
+    }
+
+    .story-headline.lg {
+      font-size: clamp(18px, 2vw, 24px);
+    }
+
+    .story-headline.md {
+      font-size: clamp(15px, 1.6vw, 19px);
+    }
+
+    .story-headline.sm {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .story-byline {
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      font-family: var(--font-body);
+      margin-bottom: 8px;
+    }
+
+    .story-timestamp {
+      font-size: 8px;
+      color: var(--ink-faint);
+      font-style: italic;
+      font-family: var(--font-body);
+    }
+
+    .story-body {
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: var(--ink-light);
+      font-family: var(--font-body);
+    }
+
+    .story-body p + p {
+      text-indent: 1em;
+    }
+
+    /* Drop cap on lead */
+    .story-body.has-dropcap p:first-child::first-letter {
+      font-family: var(--font-head);
+      font-size: 3.8em;
+      font-weight: 900;
+      float: left;
+      line-height: 0.78;
+      margin: 0.06em 0.06em 0 0;
+      color: var(--ink);
+    }
+
+    /* ─── Pull quote ─────────────────────────────────────────────────── */
+    .pull-quote {
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      margin: 16px 0;
+      padding: 12px 0;
+    }
+
+    .pull-quote p {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-style: italic;
+      font-size: 16px;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+
+    /* ─── Red stamp ──────────────────────────────────────────────────── */
+    .stamp {
+      display: inline-block;
+      border: 1.5px solid var(--red);
+      color: var(--red);
+      font-family: var(--font-display);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      transform: rotate(-1.5deg);
+      opacity: 0.82;
+    }
+
+    /* ─── Below-fold honest column ───────────────────────────────────── */
+    .below-fold {
+      margin-top: 0;
+      border-top: 3px double var(--ink);
+    }
+
+    .honest-column {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 28px 0 32px;
+      text-align: center;
+    }
+
+    .honest-column-label {
+      font-size: 8.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-family: var(--font-body);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .honest-column-label::before,
+    .honest-column-label::after {
+      content: '————';
+      letter-spacing: -0.2em;
+      color: var(--rule-dark);
+    }
+
+    .honest-column-text {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink);
+      letter-spacing: 0.01em;
+    }
+
+    .honest-column-text strong {
+      font-weight: normal;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .honest-column-attribution {
+      margin-top: 14px;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      font-family: var(--font-body);
+    }
+
+    /* ─── CTA / Input zone ───────────────────────────────────────────── */
+    .cta-zone {
+      border-top: 1px solid var(--rule-dark);
+      padding: 40px 0 48px;
+    }
+
+    .cta-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .cta-kicker {
+      font-size: 8.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+      font-family: var(--font-body);
+    }
+
+    .cta-headline {
+      font-family: var(--font-head);
+      font-weight: 900;
+      font-size: 28px;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .cta-sub {
+      font-size: 12px;
+      color: var(--ink-faint);
+      font-style: italic;
+      font-family: var(--font-body);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 0;
+      border: 1.5px solid var(--ink);
+      background: var(--cream);
+      transition: box-shadow 0.25s ease;
+    }
+
+    .cta-form:focus-within {
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .cta-input {
+      flex: 1;
+      padding: 13px 18px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--ink);
+      background: transparent;
+      border: none;
+      outline: none;
+      letter-spacing: 0.02em;
+    }
+
+    .cta-input::placeholder {
+      color: var(--ink-faint);
+      font-style: italic;
+    }
+
+    .cta-btn {
+      padding: 13px 24px;
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      border-left: 1.5px solid var(--ink);
+      font-family: var(--font-display);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .cta-btn:hover {
+      background: var(--red);
+    }
+
+    .cta-disclaimer {
+      margin-top: 12px;
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      font-style: italic;
+      font-family: var(--font-body);
+    }
+
+    /* ─── Reflow animation on input hover ───────────────────────────── */
+    .cta-form:focus-within ~ .reflow-target,
+    .cta-input:focus ~ .reflow-target,
+    .cta-zone:hover .reflow-trigger {
+      /* handled via JS class */
+    }
+
+    body.input-active .story-headline {
+      transform: translateY(-2px);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ─── Hot metal typesetting animation ────────────────────────────── */
+    .typeset-char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(4px) scaleX(0.92);
+      transition: none;
+    }
+
+    .typeset-char.set {
+      opacity: 1;
+      transform: translateY(0) scaleX(1);
+      transition:
+        opacity 0.12s ease,
+        transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* slight spacing variation — each char gets micro-random letter-spacing */
+    .typeset-char.settle {
+      transition:
+        opacity 0.12s ease,
+        transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+        letter-spacing 0.35s ease;
+    }
+
+    /* ─── Stories animate in ─────────────────────────────────────────── */
+    .story, .honest-column, .cta-zone {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .story.revealed,
+    .honest-column.revealed,
+    .cta-zone.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── Divider rule utility ───────────────────────────────────────── */
+    .h-rule {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 0;
+    }
+
+    .h-rule.thick {
+      border-top: 2px solid var(--rule-dark);
+    }
+
+    /* ─── Photo placeholder ──────────────────────────────────────────── */
+    .story-photo {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--rule);
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-photo::after {
+      content: attr(data-caption);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(26,26,26,0.72);
+      color: var(--cream);
+      font-size: 8px;
+      padding: 4px 6px;
+      font-style: italic;
+      font-family: var(--font-body);
+      letter-spacing: 0.04em;
+    }
+
+    /* SVG sketch placeholder inside photo */
+    .story-photo svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ─── Ticker bar ─────────────────────────────────────────────────── */
+    .ticker-bar {
+      background: var(--ink);
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      height: 28px;
+      margin: 0;
+    }
+
+    .ticker-label {
+      background: var(--red);
+      color: var(--cream);
+      font-family: var(--font-display);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0 14px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .ticker-content {
+      display: flex;
+      white-space: nowrap;
+      animation: ticker-scroll 35s linear infinite;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      font-family: var(--font-body);
+      gap: 0;
+    }
+
+    .ticker-item {
+      padding: 0 24px;
+    }
+
+    .ticker-item::after {
+      content: ' ◆ ';
+      color: var(--rule);
+    }
+
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── Index / brief box ──────────────────────────────────────────── */
+    .index-box {
+      border: 1px solid var(--rule-dark);
+      padding: 14px;
+      margin-top: 16px;
+      background: rgba(212, 201, 184, 0.15);
+    }
+
+    .index-box-title {
+      font-family: var(--font-display);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .index-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 10.5px;
+      font-family: var(--font-body);
+      line-height: 1.8;
+      color: var(--ink-light);
+    }
+
+    .index-item-title {
+      flex: 1;
+      padding-right: 8px;
+    }
+
+    .index-item-dots {
+      flex: 1;
+      border-bottom: 1px dotted var(--rule-dark);
+      margin: 0 6px;
+      height: 0.8em;
+    }
+
+    .index-item-num {
+      color: var(--red);
+      font-size: 9px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── Weather / numbers box ──────────────────────────────────────── */
+    .numbers-box {
+      border: 1px solid var(--rule-dark);
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+
+    .numbers-box-title {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      font-family: var(--font-body);
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 6px;
+    }
+
+    .number-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--font-body);
+      font-size: 10.5px;
+      line-height: 1.9;
+      color: var(--ink-light);
+    }
+
+    .number-val {
+      font-family: var(--font-head);
+      font-weight: 700;
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    /* ─── Footer ─────────────────────────────────────────────────────── */
+    .footer {
+      border-top: 3px double var(--ink);
+      padding: 16px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      font-family: var(--font-body);
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .newspaper { padding: 0 20px 60px; }
+      .broadsheet {
+        grid-template-columns: 1fr;
+      }
+      .col-divider { display: none; }
+      .col-lead { padding: 20px 0; border-bottom: 1px solid var(--rule); }
+      .col-mid { padding: 20px 0; border-bottom: 1px solid var(--rule); }
+      .col-right { padding: 20px 0; }
+      .masthead-logo { font-size: clamp(52px, 14vw, 100px); }
+    }
+
+    /* ─── No-JS fallback: show everything ─────────────────────────────── */
+    .no-js body { opacity: 1; }
+    .no-js .story, .no-js .honest-column, .no-js .cta-zone {
+      opacity: 1; transform: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="newspaper">
+
+  <!-- MASTHEAD -->
+  <header class="masthead" id="masthead">
+    <div class="masthead-top-rule">
+      <span>Est. Today, For You Alone</span>
+      <span class="day-count" id="day-count">Day — of your best year.</span>
+      <span>Sancho Intelligence ·  Telegram Edition</span>
+    </div>
+
+    <div class="masthead-logo" id="masthead-logo" aria-label="Sancho Daily">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="masthead-tagline">All the news that's fit for one person.</div>
+
+    <div class="masthead-rule-bottom">
+      <span>Front page. Every morning. About you.</span>
+    </div>
+  </header>
+
+  <!-- TICKER -->
+  <div class="ticker-bar" aria-hidden="true">
+    <div class="ticker-label">Breaking</div>
+    <div class="ticker-content" id="ticker-content">
+      <!-- duplicated by JS for seamless loop -->
+    </div>
+  </div>
+
+  <!-- SECTION LABEL -->
+  <div class="section-label" aria-hidden="true">Today's Edition</div>
+
+  <!-- BROADSHEET GRID -->
+  <section class="broadsheet" aria-label="Main stories">
+
+    <!-- COL LEFT: Lead story -->
+    <div class="col-lead">
+
+      <article class="story" id="story-lead">
+        <div class="story-kicker">Top Story</div>
+        <h1 class="story-headline xl" id="hl-lead">
+          Local Founder Ships Three Projects This Week, Credits "Having Someone Handle the Rest"
+        </h1>
+        <div class="story-byline">By Our Intelligence Correspondent &mdash; <span class="story-timestamp" data-base="Updated">Updated 3 seconds ago</span></div>
+
+        <div class="story-body has-dropcap">
+          <p>In what colleagues are calling "an unusually productive stretch," the founder cleared a backlog of three pending builds, two outstanding client calls, and one overdue strategic memo — all before Thursday. Sources close to the matter confirm that none of this required a calendar audit.</p>
+          <p>The method, described only as "having someone in my corner who handles the rest," appears deceptively simple. The real work, observers note, is the kind that doesn't show up on a board: the anticipation, the pre-emption, the quiet resolution of things that were about to become problems.</p>
+        </div>
+
+        <div class="pull-quote">
+          <p>"I didn't reschedule anything. It just got handled."</p>
+        </div>
+
+        <div class="story-body">
+          <p>Three projects shipped. Zero fires. One very clear Friday morning.</p>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- COL DIVIDER -->
+    <div class="col-divider" aria-hidden="true"></div>
+
+    <!-- COL CENTER -->
+    <div class="col-mid">
+
+      <article class="story" id="story-c1">
+        <div class="story-kicker">Operations</div>
+        <h2 class="story-headline lg" id="hl-c1">Thursday Cleared: Conflict Resolved Before You Noticed</h2>
+        <div class="story-byline">Desk Report &mdash; <span class="story-timestamp" data-base="Updated">Updated 11 seconds ago</span></div>
+        <div class="story-body">
+          <p>The double-booked Thursday slot, which had the potential to derail an investor call and a team sync simultaneously, was quietly resolved early morning. Neither party was inconvenienced. Both meetings took place at their new times without comment.</p>
+        </div>
+        <div style="margin-top:10px">
+          <span class="stamp">Resolved</span>
+        </div>
+      </article>
+
+      <article class="story" id="story-c2">
+        <div class="story-kicker">Executive Briefing</div>
+        <h2 class="story-headline md" id="hl-c2">6 AM Brief: Three Things That Matter Today, Nothing Else</h2>
+        <div class="story-byline">Morning Desk &mdash; <span class="story-timestamp" data-base="Updated">Updated 44 seconds ago</span></div>
+        <div class="story-body">
+          <p>Priorities surfaced before the first meeting: shipping review, one client follow-up, and a single structural decision on the product roadmap. Everything else is noise until Friday.</p>
+        </div>
+      </article>
+
+      <!-- Index box -->
+      <div class="index-box">
+        <div class="index-box-title">Today's Brief</div>
+        <div class="index-item">
+          <span class="index-item-title">Morning call notes</span>
+          <span class="index-item-dots"></span>
+          <span class="index-item-num">Sent</span>
+        </div>
+        <div class="index-item">
+          <span class="index-item-title">Calendar cleared for Friday</span>
+          <span class="index-item-dots"></span>
+          <span class="index-item-num">Done</span>
+        </div>
+        <div class="index-item">
+          <span class="index-item-title">Pending reply: Marcos</span>
+          <span class="index-item-dots"></span>
+          <span class="index-item-num">Draft ready</span>
+        </div>
+        <div class="index-item">
+          <span class="index-item-title">Investor memo</span>
+          <span class="index-item-dots"></span>
+          <span class="index-item-num">By noon</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COL DIVIDER -->
+    <div class="col-divider" aria-hidden="true"></div>
+
+    <!-- COL RIGHT -->
+    <div class="col-right">
+
+      <!-- Numbers box -->
+      <div class="numbers-box">
+        <div class="numbers-box-title">At a Glance</div>
+        <div class="number-row"><span>Unread (handled)</span><span class="number-val">14</span></div>
+        <div class="number-row"><span>Meetings today</span><span class="number-val">2</span></div>
+        <div class="number-row"><span>Open loops closed</span><span class="number-val">7</span></div>
+        <div class="number-row"><span>Hours freed</span><span class="number-val">3.5</span></div>
+      </div>
+
+      <article class="story" id="story-r1">
+        <div class="story-kicker">Correspondence</div>
+        <h2 class="story-headline md" id="hl-r1">Follow-Up Email Sent — Client Responds Warmly, Deal Advances</h2>
+        <div class="story-byline">Commerce Desk &mdash; <span class="story-timestamp" data-base="Updated">Updated 2 minutes ago</span></div>
+        <div class="story-body">
+          <p>The follow-up to Valentina, flagged last Wednesday as "needs a nudge," went out at 8:17 AM. Her reply arrived within the hour. The project enters the proposal phase next week.</p>
+        </div>
+      </article>
+
+      <article class="story" id="story-r2">
+        <div class="story-kicker">Personal</div>
+        <h2 class="story-headline sm" id="hl-r2">The 9 AM Ritual Held for Eleven Consecutive Days</h2>
+        <div class="story-byline">Lifestyle Correspondent &mdash; <span class="story-timestamp" data-base="Updated">Updated 8 minutes ago</span></div>
+        <div class="story-body">
+          <p>No commentary needed. The streak speaks.</p>
+        </div>
+        <div style="margin-top: 10px;">
+          <span class="stamp" style="transform: rotate(1deg);">11 days</span>
+        </div>
+      </article>
+
+    </div>
+
+  </section>
+
+  <!-- BELOW FOLD: Honest Column -->
+  <section class="below-fold">
+    <div class="honest-column" id="honest-column">
+      <div class="honest-column-label">The Honest Column</div>
+      <p class="honest-column-text">
+        "The thing you've been avoiding takes <strong>twenty minutes.</strong><br />
+        Thursday at 2 is clear.<br />
+        You already know what to do."
+      </p>
+      <div class="honest-column-attribution">
+        Analysis — Sancho Intelligence &nbsp;·&nbsp; Published without attribution
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-zone" id="cta-zone">
+    <div class="cta-inner">
+      <div class="cta-kicker">Subscribe to the brief</div>
+      <h2 class="cta-headline">Front page. Every morning. About you.</h2>
+      <p class="cta-sub">
+        Your name in the masthead. Your priorities on the front page.<br />
+        Delivered before you open your eyes.
+      </p>
+
+      <div class="cta-form" id="cta-form">
+        <input
+          type="text"
+          class="cta-input"
+          id="name-input"
+          placeholder="Your first name"
+          autocomplete="off"
+          maxlength="32"
+          aria-label="Enter your first name"
+        />
+        <button class="cta-btn" id="cta-btn" type="button">Get your brief</button>
+      </div>
+      <div class="cta-disclaimer">On Telegram. No app. No inbox. Just yours.</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" aria-label="Footer">
+    <span class="footer-logo">Sancho Daily</span>
+    <span>© <span id="footer-year"></span> &nbsp;·&nbsp; All rights reserved for one reader</span>
+    <span>Telegram &nbsp;·&nbsp; AI Intelligence &nbsp;·&nbsp; Yours</span>
+  </footer>
+
+</div><!-- .newspaper -->
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Utilities ──────────────────────────────────────────────── */
+  function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
+  function qsa(sel, ctx) { return Array.from((ctx || document).querySelectorAll(sel)); }
+
+  /* ── Date math ──────────────────────────────────────────────── */
+  const now = new Date();
+  const jan1 = new Date(now.getFullYear(), 0, 1);
+  const dayOfYear = Math.ceil((now - jan1) / 86400000);
+
+  qs('#day-count').textContent = `Day ${dayOfYear} of your best year.`;
+  qs('#footer-year').textContent = now.getFullYear();
+
+  /* ── Ticker items ───────────────────────────────────────────── */
+  const tickerItems = [
+    'Thursday cleared, no action required',
+    'Morning brief delivered — 3 priorities, nothing else',
+    'Follow-up sent to Valentina — reply received',
+    'Calendar optimised: 3.5 hours freed this week',
+    'Eleven-day streak intact — no comment necessary',
+    'Investor memo: due by noon, draft 90% complete',
+    'Open loops closed: 7 resolved before 9 AM',
+    'Deal with client advances to proposal phase',
+  ];
+
+  function buildTicker() {
+    const tc = qs('#ticker-content');
+    const all = [...tickerItems, ...tickerItems]; // duplicate for seamless loop
+    tc.innerHTML = all.map(t =>
+      `<span class="ticker-item">${t}</span>`
+    ).join('');
+  }
+  buildTicker();
+
+  /* ── Hot-metal typesetting animation ───────────────────────── */
+  function typesetEl(el, text, delay, onDone) {
+    el.innerHTML = '';
+    const chars = text.split('');
+    const spans = chars.map(ch => {
+      const s = document.createElement('span');
+      s.className = 'typeset-char';
+      s.textContent = ch === ' ' ? '\u00A0' : ch;
+      // micro-random spacing variance (hot metal feel)
+      const jitter = (Math.random() - 0.5) * 0.04;
+      s.style.letterSpacing = `${jitter}em`;
+      el.appendChild(s);
+      return s;
+    });
+
+    let i = 0;
+    function setNext() {
+      if (i >= spans.length) {
+        // settle: normalize spacing
+        spans.forEach(s => {
+          s.classList.add('settle');
+          s.style.letterSpacing = '0em';
+        });
+        if (onDone) setTimeout(onDone, 400);
+        return;
+      }
+      const s = spans[i];
+      // slight delay variance: clusters of chars arrive together, then a gap
+      const base = i === 0 ? delay : 0;
+      const clusterSize = 1 + Math.floor(Math.random() * 3);
+      const isClusterEnd = (i % clusterSize === 0);
+      const gap = isClusterEnd
+        ? 18 + Math.random() * 40
+        : 4 + Math.random() * 14;
+      setTimeout(() => {
+        s.classList.add('set');
+        i++;
+        setNext();
+      }, base + (i === 0 ? 0 : gap));
+    }
+    setNext();
+  }
+
+  /* ── Build masthead logo with typesetting ───────────────────── */
+  const mastheadLogo = qs('#masthead-logo');
+  let currentName = null;
+
+  function renderMasthead(name, onDone) {
+    const fullText = name
+      ? `SANCHO DAILY — FOR ${name.toUpperCase()}`
+      : 'SANCHO DAILY';
+    typesetEl(mastheadLogo, fullText, 0, onDone);
+  }
+
+  /* ── Page reveal sequence ───────────────────────────────────── */
+  function revealPage() {
+    document.body.classList.add('visible');
+
+    // Masthead types in first
+    setTimeout(() => {
+      renderMasthead(null, () => {
+        // Then stories cascade in
+        const revealTargets = qsa('.story, .honest-column, .cta-zone');
+        revealTargets.forEach((el, idx) => {
+          setTimeout(() => el.classList.add('revealed'), idx * 80);
+        });
+      });
+    }, 400); // initial blank cream pause
+  }
+
+  /* ── Live timestamps ─────────────────────────────────────────── */
+  function updateTimestamps() {
+    qsa('.story-timestamp').forEach(el => {
+      const base = el.dataset.base || 'Updated';
+      // rotate through realistic short intervals
+      const options = [
+        '3 seconds ago',
+        '11 seconds ago',
+        '44 seconds ago',
+        '2 minutes ago',
+        '8 minutes ago',
+        '12 minutes ago',
+        'just now',
+      ];
+      const stored = el.dataset.ts;
+      if (!stored) {
+        const pick = options[Math.floor(Math.random() * options.length)];
+        el.dataset.ts = pick;
+        el.textContent = `${base} ${pick}`;
+      }
+    });
+
+    // Occasionally update one timestamp to feel live
+    setInterval(() => {
+      const all = qsa('.story-timestamp');
+      const target = all[Math.floor(Math.random() * all.length)];
+      if (!target) return;
+      const base = target.dataset.base || 'Updated';
+      const freshOptions = ['just now', '3 seconds ago', '1 minute ago'];
+      const pick = freshOptions[Math.floor(Math.random() * freshOptions.length)];
+      target.dataset.ts = pick;
+      target.textContent = `${base} ${pick}`;
+    }, 8000 + Math.random() * 12000);
+  }
+
+  /* ── Name input → masthead re-render ────────────────────────── */
+  const nameInput = qs('#name-input');
+  const ctaBtn = qs('#cta-btn');
+  let debounceTimer = null;
+  let hasPersonalized = false;
+
+  nameInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    const val = nameInput.value.trim();
+    debounceTimer = setTimeout(() => {
+      if (val.length >= 2) {
+        renderMasthead(val);
+        document.body.classList.add('input-active');
+      } else if (val.length === 0 && hasPersonalized) {
+        renderMasthead(null);
+        document.body.classList.remove('input-active');
+        hasPersonalized = false;
+      }
+      if (val.length >= 2) hasPersonalized = true;
+    }, 160);
+  });
+
+  // Input focus → subtle headline reflow
+  nameInput.addEventListener('focus', () => {
+    document.body.classList.add('input-active');
+  });
+
+  nameInput.addEventListener('blur', () => {
+    if (!nameInput.value.trim()) {
+      document.body.classList.remove('input-active');
+    }
+  });
+
+  // CTA button
+  ctaBtn.addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    if (name) {
+      ctaBtn.textContent = 'See you tomorrow.';
+      ctaBtn.style.background = '#2a6e3a';
+      ctaBtn.style.cursor = 'default';
+      ctaBtn.disabled = true;
+      renderMasthead(name);
+    } else {
+      nameInput.focus();
+      nameInput.placeholder = 'Start with your name.';
+    }
+  });
+
+  nameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') ctaBtn.click();
+  });
+
+  /* ── Init ────────────────────────────────────────────────────── */
+  updateTimestamps();
+  revealPage();
+
+})();
+</script>
+</body>
+</html>

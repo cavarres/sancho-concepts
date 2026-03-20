@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sancho — Your AI Right Hand</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #1A1512;
+      --sancho-bubble-bg: #2d2520;
+      --sancho-bubble-text: #e8d5c0;
+      --user-bubble-bg: #3d3530;
+      --user-bubble-text: #f0e8e0;
+      --thinking-color: #8a7a6a;
+      --wordmark-color: #c8b89a;
+      --subtle-text: #6a5a4a;
+      --input-color: #f0e8e0;
+      --ghost-color: #4a3a2a;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── Wordmark ── */
+    .wordmark {
+      position: fixed;
+      top: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 6px;
+      color: var(--wordmark-color);
+      opacity: 0.7;
+      text-transform: uppercase;
+      z-index: 10;
+    }
+
+    /* ── Chat window ── */
+    .chat-container {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    /* ── Profile header ── */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(138, 122, 106, 0.12);
+    }
+
+    .profile-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #5a4535 0%, #3d2e20 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #c8b89a;
+      flex-shrink: 0;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .profile-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #e8d5c0;
+      letter-spacing: 0.01em;
+      transition: opacity 0.8s ease;
+    }
+
+    .profile-location {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--thinking-color);
+      letter-spacing: 0.02em;
+      transition: opacity 0.8s ease;
+    }
+
+    .profile-sancho-badge {
+      margin-left: auto;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--thinking-color);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    /* ── Messages ── */
+    .messages {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 280px;
+    }
+
+    .message {
+      display: flex;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .message.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message.sancho {
+      justify-content: flex-start;
+    }
+
+    .bubble {
+      max-width: 82%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      line-height: 1.55;
+    }
+
+    .bubble.user-bubble {
+      background: var(--user-bubble-bg);
+      color: var(--user-bubble-text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      border-bottom-right-radius: 5px;
+    }
+
+    .bubble.sancho-bubble {
+      background: var(--sancho-bubble-bg);
+      color: var(--sancho-bubble-text);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 15.5px;
+      font-weight: 400;
+      border-bottom-left-radius: 5px;
+      line-height: 1.6;
+    }
+
+    /* ── Thinking indicator ── */
+    .thinking {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 16px;
+      background: var(--sancho-bubble-bg);
+      border-radius: 18px;
+      border-bottom-left-radius: 5px;
+      width: fit-content;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .thinking.visible {
+      opacity: 1;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--thinking-color);
+      opacity: 0.3;
+      animation: none;
+    }
+
+    .thinking.active .dot:nth-child(1) {
+      animation: pulse 800ms ease-in-out infinite 0ms;
+    }
+    .thinking.active .dot:nth-child(2) {
+      animation: pulse 800ms ease-in-out infinite 180ms;
+    }
+    .thinking.active .dot:nth-child(3) {
+      animation: pulse 800ms ease-in-out infinite 360ms;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.25; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ── Bottom section ── */
+    .bottom-section {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      min-height: 80px;
+    }
+
+    /* ── Invite text ── */
+    .invite-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--subtle-text);
+      letter-spacing: 0.04em;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      margin-bottom: 20px;
+    }
+
+    .invite-text.visible {
+      opacity: 1;
+    }
+
+    /* ── Ghost message (Sofia's last message fading out) ── */
+    .ghost-message {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: flex-end;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .ghost-message.visible {
+      opacity: 1;
+    }
+
+    .ghost-message.fading {
+      opacity: 0;
+    }
+
+    .ghost-bubble {
+      max-width: 82%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      border-bottom-right-radius: 5px;
+      background: var(--ghost-color);
+      color: rgba(240, 232, 224, 0.35);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.55;
+    }
+
+    /* ── Name input ── */
+    .name-input-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      width: 100%;
+    }
+
+    .name-input-wrapper.visible {
+      opacity: 1;
+    }
+
+    .name-input-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--subtle-text);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .name-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(200, 184, 154, 0.25);
+      color: var(--input-color);
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 300;
+      text-align: center;
+      width: 200px;
+      padding: 4px 0 8px;
+      outline: none;
+      letter-spacing: 0.02em;
+      caret-color: #c8b89a;
+      transition: border-color 0.3s ease;
+    }
+
+    .name-input:focus {
+      border-bottom-color: rgba(200, 184, 154, 0.7);
+    }
+
+    .name-input::placeholder {
+      color: rgba(200, 184, 154, 0.2);
+      font-style: italic;
+    }
+
+    /* ── Personalized response section ── */
+    .personalized-response {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 20px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .personalized-response.visible {
+      opacity: 1;
+    }
+
+    /* ── CTA ── */
+    .cta {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-align: center;
+    }
+
+    .cta.visible {
+      opacity: 1;
+    }
+
+    .cta-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--subtle-text);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Scrollbar hide ── */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ── Grain overlay ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.4;
+    }
+
+    /* ── Vignette ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(10, 8, 6, 0.65) 100%);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Subtle ambient glow behind chat */
+    .ambient {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(ellipse at center, rgba(90, 60, 30, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .chat-container, .bottom-section, .ghost-message, .personalized-response {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Phase states */
+    .phase-demo .bottom-section { display: none; }
+    .phase-transition .bottom-section { display: flex; }
+    .phase-input .bottom-section { display: flex; }
+    .phase-response .bottom-section { display: flex; }
+  </style>
+</head>
+<body>
+
+  <div class="ambient"></div>
+
+  <div class="wordmark">Sancho</div>
+
+  <div class="chat-container" id="chatContainer">
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">S</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">Sofia</div>
+        <div class="profile-location" id="profileLocation">Barcelona</div>
+      </div>
+      <div class="profile-sancho-badge">AI Right Hand</div>
+    </div>
+
+    <div class="messages" id="messages">
+      <!-- Messages injected by JS -->
+    </div>
+
+    <div class="message sancho" id="thinkingWrapper" style="opacity:0; transform:translateY(6px); transition: opacity 0.25s ease, transform 0.25s ease;">
+      <div class="thinking" id="thinking">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ghost message — Sofia's last line persists during transition -->
+  <div class="ghost-message" id="ghostMessage">
+    <div class="ghost-bubble">Also I need to prep for the board meeting</div>
+  </div>
+
+  <div class="bottom-section" id="bottomSection" style="display:none;">
+    <div class="invite-text" id="inviteText">Want to try?</div>
+    <div class="name-input-wrapper" id="nameInputWrapper">
+      <div class="name-input-label">Your name</div>
+      <input
+        type="text"
+        class="name-input"
+        id="nameInput"
+        placeholder="Enter your name"
+        autocomplete="off"
+        spellcheck="false"
+        maxlength="32"
+      />
+    </div>
+  </div>
+
+  <div class="personalized-response" id="personalizedResponse">
+    <!-- Injected after name entry -->
+  </div>
+
+  <div class="cta" id="cta">
+    <div class="cta-text">Sancho lives on Telegram — start your session today</div>
+  </div>
+
+  <script>
+    // ── State ──────────────────────────────────────────────────────────────
+    let phase = 'demo'; // demo → transition → input → response
+    let soundEnabled = false;
+    let audioCtx = null;
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour >= 5 && hour < 12) return 'morning';
+      if (hour >= 12 && hour < 17) return 'afternoon';
+      if (hour >= 17 && hour < 21) return 'evening';
+      return 'night';
+    }
+
+    function getTimeContext() {
+      const hour = new Date().getHours();
+      if (hour >= 5 && hour < 9) return 'early in the day';
+      if (hour >= 9 && hour < 12) return 'mid-morning';
+      if (hour >= 12 && hour < 14) return 'around midday';
+      if (hour >= 14 && hour < 17) return 'in the afternoon';
+      if (hour >= 17 && hour < 20) return 'this evening';
+      if (hour >= 20 && hour < 23) return 'tonight';
+      return 'late at night';
+    }
+
+    // ── Sound ──────────────────────────────────────────────────────────────
+    function playResolutionChord() {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const frequencies = [261.63, 329.63, 392.00, 523.25]; // C major chord
+        frequencies.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.04 - i * 0.005, audioCtx.currentTime + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.5);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 2.5);
+        });
+      } catch (e) {}
+    }
+
+    // ── DOM helpers ────────────────────────────────────────────────────────
+    function createMessage(role, text) {
+      const el = document.createElement('div');
+      el.className = `message ${role}`;
+      const bubble = document.createElement('div');
+      bubble.className = role === 'user' ? 'bubble user-bubble' : 'bubble sancho-bubble';
+      bubble.textContent = text;
+      el.appendChild(bubble);
+      return el;
+    }
+
+    function showThinking() {
+      const wrapper = document.getElementById('thinkingWrapper');
+      const thinking = document.getElementById('thinking');
+      wrapper.style.opacity = '1';
+      wrapper.style.transform = 'translateY(0)';
+      thinking.classList.add('visible', 'active');
+    }
+
+    function hideThinking() {
+      const wrapper = document.getElementById('thinkingWrapper');
+      const thinking = document.getElementById('thinking');
+      thinking.classList.remove('active');
+      wrapper.style.opacity = '0';
+      wrapper.style.transform = 'translateY(6px)';
+    }
+
+    async function appendMessage(role, text, thinkingDelay = 0) {
+      const container = document.getElementById('messages');
+      const thinkingWrapper = document.getElementById('thinkingWrapper');
+
+      if (thinkingDelay > 0) {
+        showThinking();
+        // Move thinking wrapper to end of messages visually
+        container.appendChild(thinkingWrapper);
+        await sleep(thinkingDelay);
+        hideThinking();
+        await sleep(80);
+      }
+
+      const msg = createMessage(role, text);
+      container.appendChild(msg);
+
+      // Force reflow then animate in
+      void msg.offsetWidth;
+      msg.classList.add('visible');
+
+      return msg;
+    }
+
+    // ── Demo sequence ──────────────────────────────────────────────────────
+    async function runDemo() {
+      await sleep(1200);
+
+      // Sofia message 1
+      await appendMessage('user', 'Can you check if my dentist appointment on Friday conflicts with anything?');
+      await sleep(400);
+
+      // Sancho thinking 1 — 1400ms
+      await appendMessage('sancho', 'It does — you have a standing 1:1 with the design team at 3pm. Want me to move the dentist to next Tuesday? There\'s a 10am slot.', 1400);
+      await sleep(600);
+
+      // Sofia message 2
+      await appendMessage('user', 'Yes please. Also I need to prep for the board meeting');
+      await sleep(400);
+
+      // Sancho thinking 2 — 1800ms
+      await appendMessage('sancho', 'Done. Dentist moved. For the board meeting — I\'ve pulled the last three board decks and the Q4 targets. Give me 20 minutes and I\'ll have a one-pager ready.', 1800);
+
+      // Pause — 3 seconds of reading time
+      await sleep(3000);
+
+      // Transition
+      await runTransition();
+    }
+
+    // ── Transition ─────────────────────────────────────────────────────────
+    async function runTransition() {
+      phase = 'transition';
+
+      // Show ghost message (Sofia's last line — relay baton)
+      const ghost = document.getElementById('ghostMessage');
+      ghost.classList.add('visible');
+
+      // Fade Sofia's profile info
+      const profileName = document.getElementById('profileName');
+      const profileLocation = document.getElementById('profileLocation');
+      const profileAvatar = document.getElementById('profileAvatar');
+
+      profileName.style.opacity = '0';
+      profileLocation.style.opacity = '0';
+      profileAvatar.style.opacity = '0';
+
+      await sleep(900);
+
+      // Ghost message starts fading
+      ghost.classList.add('fading');
+
+      await sleep(800);
+
+      // Show bottom section
+      document.getElementById('bottomSection').style.display = 'flex';
+
+      // Show invite text
+      await sleep(100);
+      document.getElementById('inviteText').classList.add('visible');
+
+      await sleep(600);
+
+      // Show name input
+      document.getElementById('nameInputWrapper').classList.add('visible');
+
+      await sleep(300);
+
+      // Focus input
+      document.getElementById('nameInput').focus();
+
+      phase = 'input';
+    }
+
+    // ── Name entry ─────────────────────────────────────────────────────────
+    async function handleNameEntry(name) {
+      if (phase !== 'input') return;
+      phase = 'response';
+
+      const nameInput = document.getElementById('nameInput');
+      nameInput.disabled = true;
+
+      // Update profile to new user
+      const profileAvatar = document.getElementById('profileAvatar');
+      const profileName = document.getElementById('profileName');
+      const profileLocation = document.getElementById('profileLocation');
+
+      const initial = name.trim().charAt(0).toUpperCase();
+      profileAvatar.textContent = initial;
+
+      profileName.style.transition = 'opacity 0.5s ease';
+      profileLocation.style.transition = 'opacity 0.5s ease';
+      profileAvatar.style.transition = 'opacity 0.5s ease';
+
+      profileName.textContent = name.trim();
+      profileLocation.textContent = 'Just joined';
+      profileAvatar.style.opacity = '1';
+      profileName.style.opacity = '1';
+      profileLocation.style.opacity = '1';
+
+      // Fade out the input area
+      document.getElementById('nameInputWrapper').style.opacity = '0';
+      document.getElementById('inviteText').style.opacity = '0';
+
+      await sleep(400);
+
+      // Add user greeting message
+      const container = document.getElementById('messages');
+      const greeting = createMessage('user', `Hi — I'm ${name.trim()}`);
+      container.appendChild(greeting);
+      void greeting.offsetWidth;
+      greeting.classList.add('visible');
+
+      await sleep(500);
+
+      // THE 1.8-SECOND STILLNESS — Sancho looks up and thinks about you
+      showThinking();
+      container.appendChild(document.getElementById('thinkingWrapper'));
+
+      await sleep(1800); // Not frozen. Still. Like someone who just found your file.
+
+      hideThinking();
+      await sleep(100);
+
+      // Build personalized first message
+      const firstName = name.trim().split(' ')[0];
+      const greeting2 = getGreeting();
+      const timeCtx = getTimeContext();
+
+      const personalizedText = `Good ${greeting2}, ${firstName}. I'm here. It's ${timeCtx} — tell me what's on your plate and I'll start clearing it.`;
+
+      const response = createMessage('sancho', personalizedText);
+      container.appendChild(response);
+      void response.offsetWidth;
+      response.classList.add('visible');
+
+      // Play resolution chord
+      playResolutionChord();
+
+      // Show CTA
+      await sleep(1200);
+      document.getElementById('cta').classList.add('visible');
+    }
+
+    // ── Input listener ─────────────────────────────────────────────────────
+    document.getElementById('nameInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        const val = this.value.trim();
+        if (val.length > 0) {
+          handleNameEntry(val);
+        }
+      }
+    });
+
+    // Enable sound on first interaction
+    document.addEventListener('click', function enableSound() {
+      soundEnabled = true;
+      document.removeEventListener('click', enableSound);
+    }, { once: true });
+
+    document.addEventListener('keydown', function enableSound() {
+      soundEnabled = true;
+      document.removeEventListener('keydown', enableSound);
+    }, { once: true });
+
+    // ── Boot ───────────────────────────────────────────────────────────────
+    window.addEventListener('load', () => {
+      runDemo();
+    });
+  </script>
+</body>
+</html>
